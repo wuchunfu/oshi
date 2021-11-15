@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NetworkIF.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oshi-core</a> &gt; <a href="index.source.html" class="el_package">oshi.hardware</a> &gt; <span class="el_source">NetworkIF.java</span></div><h1>NetworkIF.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>NetworkIF.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oshi-core</a> &gt; <a href="index.source.html" class="el_package">oshi.hardware</a> &gt; <span class="el_source">NetworkIF.java</span></div><h1>NetworkIF.java</h1><pre class="source lang-java linenums">/**
  * MIT License
  *
- * Copyright (c) 2010 - 2021 The OSHI Project Contributors: https://github.com/oshi/oshi/graphs/contributors
+ * Copyright (c) 2010 - 2020 The OSHI Project Contributors:
+ * https://github.com/oshi/oshi/graphs/contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the &quot;Software&quot;), to deal
@@ -9,9 +10,8 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -23,395 +23,313 @@
  */
 package oshi.hardware;
 
+import java.io.Serializable;
+import java.net.InetAddress;
 import java.net.NetworkInterface;
+import java.net.SocketException;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
-import oshi.annotation.concurrent.ThreadSafe;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import oshi.SystemInfo;
+import oshi.hardware.platform.linux.LinuxNetworks;
+import oshi.hardware.platform.mac.MacNetworks;
+import oshi.hardware.platform.unix.freebsd.FreeBsdNetworks;
+import oshi.hardware.platform.unix.solaris.SolarisNetworks;
+import oshi.hardware.platform.windows.WindowsNetworks;
+import oshi.util.ParseUtil;
+import oshi.util.StringUtil;
 
 /**
- * A network interface in the machine, including statistics.
- * &lt;p&gt;
- * Thread safe for the designed use of retrieving the most recent data. Users
- * should be aware that the {@link #updateAttributes()} method may update
- * attributes, including the time stamp, and should externally synchronize such
- * usage to ensure consistent calculations.
+ * A network interface in the machine, including statistics
+ *
+ * @author enrico[dot]bianchi[at]gmail[dot]com
  */
-@ThreadSafe
-public interface NetworkIF {
+<span class="fc" id="L52">public class NetworkIF implements Serializable {</span>
+
+    private static final long serialVersionUID = 2L;
+
+<span class="fc" id="L56">    private static final Logger LOG = LoggerFactory.getLogger(NetworkIF.class);</span>
+
+    private transient NetworkInterface networkInterface;
+    private int mtu;
+    private String mac;
+    private String[] ipv4;
+    private String[] ipv6;
+    private long bytesRecv;
+    private long bytesSent;
+    private long packetsRecv;
+    private long packetsSent;
+    private long inErrors;
+    private long outErrors;
+    private long speed;
+    private long timeStamp;
 
     /**
-     * Gets the {@link java.net.NetworkInterface} object.
-     *
-     * @return the network interface, an instance of
-     *         {@link java.net.NetworkInterface}.
+     * @return the network interface
      */
-    NetworkInterface queryNetworkInterface();
+    public NetworkInterface getNetworkInterface() {
+<span class="fc" id="L76">        return this.networkInterface;</span>
+    }
 
     /**
-     * Interface name.
+     * Sets the network interface and calculates other information derived from it
      *
+     * @param networkInterface
+     *            The network interface to set
+     */
+    public void setNetworkInterface(NetworkInterface networkInterface) {
+<span class="fc" id="L86">        this.networkInterface = networkInterface;</span>
+        try {
+            // Set MTU
+<span class="fc" id="L89">            this.mtu = networkInterface.getMTU();</span>
+            // Set MAC
+<span class="fc" id="L91">            byte[] hwmac = networkInterface.getHardwareAddress();</span>
+<span class="pc bpc" id="L92" title="1 of 2 branches missed.">            if (hwmac != null) {</span>
+<span class="fc" id="L93">                List&lt;String&gt; octets = new ArrayList&lt;String&gt;(6);</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">                for (byte b : hwmac) {</span>
+<span class="fc" id="L95">                    octets.add(String.format(&quot;%02x&quot;, b));</span>
+                }
+<span class="fc" id="L97">                this.mac = StringUtil.join(&quot;:&quot;, octets);</span>
+<span class="fc" id="L98">            } else {</span>
+<span class="nc" id="L99">                this.mac = &quot;Unknown&quot;;</span>
+            }
+            // Set IP arrays
+<span class="fc" id="L102">            ArrayList&lt;String&gt; ipv4list = new ArrayList&lt;String&gt;();</span>
+<span class="fc" id="L103">            ArrayList&lt;String&gt; ipv6list = new ArrayList&lt;String&gt;();</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">            for (InetAddress address : Collections.list(networkInterface.getInetAddresses())) {</span>
+<span class="pc bpc" id="L105" title="1 of 2 branches missed.">                if (address.getHostAddress().length() &gt; 0) {</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">                    if (address.getHostAddress().contains(&quot;:&quot;)) {</span>
+<span class="fc" id="L107">                        ipv6list.add(address.getHostAddress().split(&quot;%&quot;)[0]);</span>
+                    } else {
+<span class="fc" id="L109">                        ipv4list.add(address.getHostAddress());</span>
+                    }
+                }
+<span class="fc" id="L112">            }</span>
+<span class="fc" id="L113">            this.ipv4 = ipv4list.toArray(new String[ipv4list.size()]);</span>
+<span class="fc" id="L114">            this.ipv6 = ipv6list.toArray(new String[ipv6list.size()]);</span>
+<span class="nc" id="L115">        } catch (SocketException e) {</span>
+<span class="nc" id="L116">            LOG.error(&quot;Socket exception: {}&quot;, e);</span>
+<span class="fc" id="L117">        }</span>
+<span class="fc" id="L118">    }</span>
+
+    /**
      * @return The interface name.
      */
-    String getName();
+    public String getName() {
+<span class="fc" id="L124">        return this.networkInterface.getName();</span>
+    }
 
     /**
-     * Interface index.
-     *
-     * @return The index of the network interface.
-     */
-    int getIndex();
-
-    /**
-     * Interface description.
-     *
      * @return The description of the network interface. On some platforms, this is
      *         identical to the name.
      */
-    String getDisplayName();
-
-    /**
-     * The {@code ifAlias} as described in RFC 2863.
-     * &lt;p&gt;
-     * The ifAlias object allows a network manager to give one or more interfaces
-     * their own unique names, irrespective of any interface-stack relationship.
-     * Further, the ifAlias name is non-volatile, and thus an interface must retain
-     * its assigned ifAlias value across reboots, even if an agent chooses a new
-     * ifIndex value for the interface.
-     * &lt;p&gt;
-     * Only implemented for Windows (Vista and newer) and Linux.
-     *
-     * @return The {@code ifAlias} of the interface if available, otherwise the
-     *         empty string.
-     */
-    default String getIfAlias() {
-<span class="fc" id="L87">        return &quot;&quot;;</span>
+    public String getDisplayName() {
+<span class="fc" id="L132">        return this.networkInterface.getDisplayName();</span>
     }
 
     /**
-     * The {@code ifOperStatus} as described in RFC 2863.
-     * &lt;p&gt;
-     * Only implemented for Windows (Vista and newer) and Linux.
-     *
-     * @return The current operational state of the interface.
+     * @return The MTU of the network interface. This value is set when the
+     *         {@link NetworkIF} is instantiated and may not be up to date. To
+     *         update this value, execute the
+     *         {@link #setNetworkInterface(NetworkInterface)} method
      */
-    default IfOperStatus getIfOperStatus() {
-<span class="fc" id="L98">        return IfOperStatus.UNKNOWN;</span>
+    public int getMTU() {
+<span class="fc" id="L142">        return this.mtu;</span>
     }
 
     /**
-     * The interface Maximum Transmission Unit (MTU).
-     *
-     * @return The MTU of the network interface.
-     *         &lt;p&gt;
-     *         The value is a 32-bit integer which may be unsigned on some operating
-     *         systems. On Windows, some non-physical interfaces (e.g., loopback)
-     *         may return a value of -1 which is equivalent to the maximum unsigned
-     *         integer value.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
-     *         instantiated and may not be up to date.
+     * @return The MAC Address. This value is set when the {@link NetworkIF} is
+     *         instantiated and may not be up to date. To update this value, execute
+     *         the {@link #setNetworkInterface(NetworkInterface)} method
      */
-    int getMTU();
-
-    /**
-     * The Media Access Control (MAC) address.
-     *
-     * @return The MAC Address.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
-     *         instantiated and may not be up to date.
-     */
-    String getMacaddr();
-
-    /**
-     * The Internet Protocol (IP) v4 address.
-     *
-     * @return An array of IPv4 Addresses.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
-     *         instantiated and may not be up to date.
-     */
-    String[] getIPv4addr();
-
-    /**
-     * The Internet Protocol (IP) v4 subnet masks.
-     *
-     * @return An array of IPv4 subnet mask lengths, corresponding to the IPv4
-     *         addresses from {@link #getIPv4addr()}. Ranges between 0-32.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
-     *         instantiated and may not be up to date.
-     *
-     */
-    Short[] getSubnetMasks();
-
-    /**
-     * The Internet Protocol (IP) v6 address.
-     *
-     * @return An array of IPv6 Addresses.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
-     *         instantiated and may not be up to date.
-     */
-    String[] getIPv6addr();
-
-    /**
-     * The Internet Protocol (IP) v6 address.
-     *
-     * @return The IPv6 address prefix lengths, corresponding to the IPv6 addresses
-     *         from {@link #getIPv6addr()}. Ranges between 0-128.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
-     *         instantiated and may not be up to date.
-     */
-    Short[] getPrefixLengths();
-
-    /**
-     * (Windows, macOS) The NDIS Interface Type. NDIS interface types are registered
-     * with the Internet Assigned Numbers Authority (IANA), which publishes a list
-     * of interface types periodically in the Assigned Numbers RFC, or in a
-     * derivative of it that is specific to Internet network management number
-     * assignments.
-     * &lt;p&gt;
-     * (Linux) ARP Protocol hardware identifiers defined in
-     * {@code include/uapi/linux/if_arp.h}
-     *
-     * @return the ifType
-     */
-    default int getIfType() {
-<span class="nc" id="L182">        return 0;</span>
+    public String getMacaddr() {
+<span class="fc" id="L151">        return this.mac;</span>
     }
 
     /**
-     * (Windows Vista and higher only) The NDIS physical medium type. This member
-     * can be one of the values from the {@code NDIS_PHYSICAL_MEDIUM} enumeration
-     * type defined in the {@code Ntddndis.h} header file.
-     *
-     * @return the ndisPhysicalMediumType
+     * @return The IPv4 Addresses. This value is set when the {@link NetworkIF} is
+     *         instantiated and may not be up to date. To update this value, execute
+     *         the {@link #setNetworkInterface(NetworkInterface)} method
      */
-    default int getNdisPhysicalMediumType() {
-<span class="fc" id="L193">        return 0;</span>
+    public String[] getIPv4addr() {
+<span class="fc" id="L160">        return Arrays.copyOf(this.ipv4, this.ipv4.length);</span>
     }
 
     /**
-     * (Windows Vista and higher) Set if a connector is present on the network
-     * interface.
-     * &lt;p&gt;
-     * (Linux) Indicates the current physical link state of the interface.
-     *
-     * @return {@code true} if there is a physical network adapter (Windows) or a
-     *         connected cable (Linux), false otherwise
+     * @return The IPv6 Addresses. This value is set when the {@link NetworkIF} is
+     *         instantiated and may not be up to date. To update this value, execute
+     *         the {@link #setNetworkInterface(NetworkInterface)} method
      */
-    default boolean isConnectorPresent() {
-<span class="nc" id="L206">        return false;</span>
+    public String[] getIPv6addr() {
+<span class="fc" id="L169">        return Arrays.copyOf(this.ipv6, this.ipv6.length);</span>
     }
 
     /**
-     * &lt;p&gt;
-     * Getter for the field &lt;code&gt;bytesRecv&lt;/code&gt;.
-     * &lt;/p&gt;
-     *
-     * @return The Bytes Received.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
+     * @return The Bytes Received. This value is set when the {@link NetworkIF} is
      *         instantiated and may not be up to date. To update this value, execute
-     *         the {@link #updateAttributes()} method
+     *         the {@link #updateNetworkStats()} method
      */
-    long getBytesRecv();
+    public long getBytesRecv() {
+<span class="fc" id="L178">        return this.bytesRecv;</span>
+    }
 
     /**
-     * &lt;p&gt;
-     * Getter for the field &lt;code&gt;bytesSent&lt;/code&gt;.
-     * &lt;/p&gt;
-     *
-     * @return The Bytes Sent.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
-     *         instantiated and may not be up to date. To update this value, execute
-     *         the {@link #updateAttributes()} method
+     * @param bytesRecv
+     *            Set Bytes Received
      */
-    long getBytesSent();
+    public void setBytesRecv(long bytesRecv) {
+<span class="fc" id="L186">        this.bytesRecv = ParseUtil.unsignedLongToSignedLong(bytesRecv);</span>
+<span class="fc" id="L187">    }</span>
 
     /**
-     * &lt;p&gt;
-     * Getter for the field &lt;code&gt;packetsRecv&lt;/code&gt;.
-     * &lt;/p&gt;
-     *
-     * @return The Packets Received.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
+     * @return The Bytes Sent. This value is set when the {@link NetworkIF} is
      *         instantiated and may not be up to date. To update this value, execute
-     *         the {@link #updateAttributes()} method
+     *         the {@link #updateNetworkStats()} method
      */
-    long getPacketsRecv();
+    public long getBytesSent() {
+<span class="fc" id="L195">        return this.bytesSent;</span>
+    }
 
     /**
-     * &lt;p&gt;
-     * Getter for the field &lt;code&gt;packetsSent&lt;/code&gt;.
-     * &lt;/p&gt;
-     *
-     * @return The Packets Sent.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
-     *         instantiated and may not be up to date. To update this value, execute
-     *         the {@link #updateAttributes()} method
+     * @param bytesSent
+     *            Set the Bytes Sent
      */
-    long getPacketsSent();
+    public void setBytesSent(long bytesSent) {
+<span class="fc" id="L203">        this.bytesSent = ParseUtil.unsignedLongToSignedLong(bytesSent);</span>
+<span class="fc" id="L204">    }</span>
 
     /**
-     * &lt;p&gt;
-     * Getter for the field &lt;code&gt;inErrors&lt;/code&gt;.
-     * &lt;/p&gt;
-     *
-     * @return Input Errors.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
+     * @return The Packets Received. This value is set when the {@link NetworkIF} is
      *         instantiated and may not be up to date. To update this value, execute
-     *         the {@link #updateAttributes()} method
+     *         the {@link #updateNetworkStats()} method
      */
-    long getInErrors();
+    public long getPacketsRecv() {
+<span class="fc" id="L212">        return this.packetsRecv;</span>
+    }
 
     /**
-     * &lt;p&gt;
-     * Getter for the field &lt;code&gt;outErrors&lt;/code&gt;.
-     * &lt;/p&gt;
-     *
-     * @return The Output Errors.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
-     *         instantiated and may not be up to date. To update this value, execute
-     *         the {@link #updateAttributes()} method
+     * @param packetsRecv
+     *            Set The Packets Received
      */
-    long getOutErrors();
+    public void setPacketsRecv(long packetsRecv) {
+<span class="fc" id="L220">        this.packetsRecv = ParseUtil.unsignedLongToSignedLong(packetsRecv);</span>
+<span class="fc" id="L221">    }</span>
 
     /**
-     * &lt;p&gt;
-     * Getter for the field &lt;code&gt;inDrops&lt;/code&gt;.
-     * &lt;/p&gt;
-     *
-     * @return Incoming/Received dropped packets. On Windows, returns discarded
-     *         incoming packets.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
+     * @return The Packets Sent. This value is set when the {@link NetworkIF} is
      *         instantiated and may not be up to date. To update this value, execute
-     *         the {@link #updateAttributes()} method
+     *         the {@link #updateNetworkStats()} method
      */
-    long getInDrops();
+    public long getPacketsSent() {
+<span class="fc" id="L229">        return this.packetsSent;</span>
+    }
 
     /**
-     * &lt;p&gt;
-     * Getter for the field &lt;code&gt;collisions&lt;/code&gt;.
-     * &lt;/p&gt;
-     *
-     * @return Packet collisions. On Windows, returns discarded outgoing packets.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
-     *         instantiated and may not be up to date. To update this value, execute
-     *         the {@link #updateAttributes()} method
+     * @param packetsSent
+     *            Set The Packets Sent
      */
-    long getCollisions();
+    public void setPacketsSent(long packetsSent) {
+<span class="fc" id="L237">        this.packetsSent = ParseUtil.unsignedLongToSignedLong(packetsSent);</span>
+<span class="fc" id="L238">    }</span>
 
     /**
-     * &lt;p&gt;
-     * Getter for the field &lt;code&gt;speed&lt;/code&gt;.
-     * &lt;/p&gt;
-     *
-     * @return The speed of the network interface in bits per second.
-     *         &lt;p&gt;
-     *         This value is set when the {@link oshi.hardware.NetworkIF} is
+     * @return Input Errors. This value is set when the {@link NetworkIF} is
      *         instantiated and may not be up to date. To update this value, execute
-     *         the {@link #updateAttributes()} method
+     *         the {@link #updateNetworkStats()} method
      */
-    long getSpeed();
+    public long getInErrors() {
+<span class="fc" id="L246">        return this.inErrors;</span>
+    }
 
     /**
-     * &lt;p&gt;
-     * Getter for the field &lt;code&gt;timeStamp&lt;/code&gt;.
-     * &lt;/p&gt;
-     *
+     * @param inErrors
+     *            The Input Errors to set.
+     */
+    public void setInErrors(long inErrors) {
+<span class="fc" id="L254">        this.inErrors = ParseUtil.unsignedLongToSignedLong(inErrors);</span>
+<span class="fc" id="L255">    }</span>
+
+    /**
+     * @return The Output Errors. This value is set when the {@link NetworkIF} is
+     *         instantiated and may not be up to date. To update this value, execute
+     *         the {@link #updateNetworkStats()} method
+     */
+    public long getOutErrors() {
+<span class="fc" id="L263">        return this.outErrors;</span>
+    }
+
+    /**
+     * @param outErrors
+     *            The Output Errors to set.
+     */
+    public void setOutErrors(long outErrors) {
+<span class="fc" id="L271">        this.outErrors = ParseUtil.unsignedLongToSignedLong(outErrors);</span>
+<span class="fc" id="L272">    }</span>
+
+    /**
+     * @return The speed of the network interface in bits per second. This value is
+     *         set when the {@link NetworkIF} is instantiated and may not be up to
+     *         date. To update this value, execute the {@link #updateNetworkStats()}
+     *         method
+     */
+    public long getSpeed() {
+<span class="fc" id="L281">        return this.speed;</span>
+    }
+
+    /**
+     * @param speed
+     *            Set the speed of the network interface
+     */
+    public void setSpeed(long speed) {
+<span class="fc" id="L289">        this.speed = ParseUtil.unsignedLongToSignedLong(speed);</span>
+<span class="fc" id="L290">    }</span>
+
+    /**
      * @return Returns the timeStamp.
      */
-    long getTimeStamp();
+    public long getTimeStamp() {
+<span class="fc" id="L296">        return this.timeStamp;</span>
+    }
 
     /**
-     * Determines if the MAC address on this interface corresponds to a known
-     * Virtual Machine.
-     *
-     * @return {@code true} if the MAC address corresponds to a known virtual
-     *         machine.
+     * @param timeStamp
+     *            The timeStamp to set.
      */
-    boolean isKnownVmMacAddr();
+    public void setTimeStamp(long timeStamp) {
+<span class="fc" id="L304">        this.timeStamp = timeStamp;</span>
+<span class="fc" id="L305">    }</span>
 
     /**
      * Updates interface network statistics on this interface. Statistics include
      * packets and bytes sent and received, and interface speed.
-     *
-     * @return {@code true} if the update was successful, {@code false} otherwise.
      */
-    boolean updateAttributes();
-
-    /**
-     * The current operational state of a network interface.
-     * &lt;p&gt;
-     * As described in RFC 2863.
-     */
-<span class="fc" id="L358">    enum IfOperStatus {</span>
-        /**
-         * Up and operational. Ready to pass packets.
-         */
-<span class="fc" id="L362">        UP(1),</span>
-        /**
-         * Down and not operational. Not ready to pass packets.
-         */
-<span class="fc" id="L366">        DOWN(2),</span>
-        /**
-         * In some test mode.
-         */
-<span class="fc" id="L370">        TESTING(3),</span>
-        /**
-         * The interface status is unknown.
-         */
-<span class="fc" id="L374">        UNKNOWN(4),</span>
-        /**
-         * The interface is not up, but is in a pending state, waiting for some external
-         * event.
-         */
-<span class="fc" id="L379">        DORMANT(5),</span>
-        /**
-         * Some component is missing
-         */
-<span class="fc" id="L383">        NOT_PRESENT(6),</span>
-        /**
-         * Down due to state of lower-layer interface(s).
-         */
-<span class="fc" id="L387">        LOWER_LAYER_DOWN(7);</span>
-
-        private final int value;
-
-<span class="fc" id="L391">        IfOperStatus(int value) {</span>
-<span class="fc" id="L392">            this.value = value;</span>
-<span class="fc" id="L393">        }</span>
-
-        /**
-         * @return the integer value specified in RFC 2863 for this operational status.
-         */
-        public int getValue() {
-<span class="nc" id="L399">            return this.value;</span>
+    public void updateNetworkStats() {
+<span class="pc bpc" id="L312" title="5 of 6 branches missed.">        switch (SystemInfo.getCurrentPlatformEnum()) {</span>
+        case WINDOWS:
+<span class="nc" id="L314">            WindowsNetworks.updateNetworkStats(this);</span>
+<span class="nc" id="L315">            break;</span>
+        case LINUX:
+<span class="nc" id="L317">            LinuxNetworks.updateNetworkStats(this);</span>
+<span class="nc" id="L318">            break;</span>
+        case MACOSX:
+<span class="fc" id="L320">            MacNetworks.updateNetworkStats(this);</span>
+<span class="fc" id="L321">            break;</span>
+        case SOLARIS:
+<span class="nc" id="L323">            SolarisNetworks.updateNetworkStats(this);</span>
+<span class="nc" id="L324">            break;</span>
+        case FREEBSD:
+<span class="nc" id="L326">            FreeBsdNetworks.updateNetworkStats(this);</span>
+<span class="nc" id="L327">            break;</span>
+        default:
+<span class="nc" id="L329">            LOG.error(&quot;Unsupported platform. No update performed.&quot;);</span>
+            break;
         }
+<span class="fc" id="L332">    }</span>
 
-        /**
-         * Find IfOperStatus by the integer value.
-         *
-         * @param value
-         *            Integer value specified in RFC 2863
-         * @return the matching IfOperStatu or UNKNOWN if no matching IfOperStatus can
-         *         be found
-         */
-        public static IfOperStatus byValue(int value) {
-<span class="nc bnc" id="L411" title="All 2 branches missed.">            return Arrays.stream(IfOperStatus.values()).filter(st -&gt; st.getValue() == value).findFirst()</span>
-<span class="nc" id="L412">                    .orElse(UNKNOWN);</span>
-        }
-
-    }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

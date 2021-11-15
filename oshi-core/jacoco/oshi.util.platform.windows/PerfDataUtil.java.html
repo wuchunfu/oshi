@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PerfDataUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oshi-core</a> &gt; <a href="index.source.html" class="el_package">oshi.util.platform.windows</a> &gt; <span class="el_source">PerfDataUtil.java</span></div><h1>PerfDataUtil.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>PerfDataUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oshi-core</a> &gt; <a href="index.source.html" class="el_package">oshi.util.platform.windows</a> &gt; <span class="el_source">PerfDataUtil.java</span></div><h1>PerfDataUtil.java</h1><pre class="source lang-java linenums">/**
  * MIT License
  *
- * Copyright (c) 2010 - 2021 The OSHI Project Contributors: https://github.com/oshi/oshi/graphs/contributors
+ * Copyright (c) 2010 - 2020 The OSHI Project Contributors:
+ * https://github.com/oshi/oshi/graphs/contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the &quot;Software&quot;), to deal
@@ -9,9 +10,8 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -38,8 +38,6 @@ import com.sun.jna.platform.win32.WinError;
 import com.sun.jna.platform.win32.WinNT;
 import com.sun.jna.platform.win32.WinNT.HANDLEByReference;
 
-import oshi.annotation.concurrent.Immutable;
-import oshi.annotation.concurrent.ThreadSafe;
 import oshi.util.FormatUtil;
 import oshi.util.ParseUtil;
 import oshi.util.Util;
@@ -47,23 +45,25 @@ import oshi.util.Util;
 /**
  * Helper class to centralize the boilerplate portions of PDH counter setup and
  * allow applications to easily add, query, and remove counters.
+ *
+ * @author widdis[at]gmail[dot]com
  */
-@ThreadSafe
-public final class PerfDataUtil {
-
-<span class="nc" id="L54">    private static final Logger LOG = LoggerFactory.getLogger(PerfDataUtil.class);</span>
-
-<span class="nc" id="L56">    private static final DWORD_PTR PZERO = new DWORD_PTR(0);</span>
-<span class="nc" id="L57">    private static final DWORDByReference PDH_FMT_RAW = new DWORDByReference(new DWORD(Pdh.PDH_FMT_RAW));</span>
-<span class="nc" id="L58">    private static final Pdh PDH = Pdh.INSTANCE;</span>
-
-<span class="nc" id="L60">    private static final boolean IS_VISTA_OR_GREATER = VersionHelpers.IsWindowsVistaOrGreater();</span>
-
+public class PerfDataUtil {
     /**
-     * Encapsulates the three string components of a performance counter
+     * Instance to generate the PerfCounter class.
      */
-    @Immutable
-    public static class PerfCounter {
+<span class="nc" id="L55">    public static final PerfDataUtil INSTANCE = new PerfDataUtil();</span>
+
+<span class="nc" id="L57">    private static final Logger LOG = LoggerFactory.getLogger(PerfDataUtil.class);</span>
+
+<span class="nc" id="L59">    private static final DWORD_PTR PZERO = new DWORD_PTR(0);</span>
+<span class="nc" id="L60">    private static final DWORDByReference PDH_FMT_RAW = new DWORDByReference(new DWORD(Pdh.PDH_FMT_RAW));</span>
+<span class="nc" id="L61">    private static final Pdh PDH = Pdh.INSTANCE;</span>
+
+    // Is AddEnglishCounter available?
+<span class="nc" id="L64">    private static final boolean IS_VISTA_OR_GREATER = VersionHelpers.IsWindowsVistaOrGreater();</span>
+
+    public class PerfCounter {
         private String object;
         private String instance;
         private String counter;
@@ -97,7 +97,7 @@ public final class PerfDataUtil {
 
         /**
          * Returns the path for this counter
-         *
+         * 
          * @return A string representing the counter path
          */
         public String getCounterPath() {
@@ -126,7 +126,7 @@ public final class PerfDataUtil {
      * @return A PerfCounter object encapsulating the object, instance, and counter
      */
     public static PerfCounter createCounter(String object, String instance, String counter) {
-<span class="nc" id="L129">        return new PerfCounter(object, instance, counter);</span>
+<span class="nc" id="L129">        return INSTANCE.new PerfCounter(object, instance, counter);</span>
     }
 
     /**
@@ -179,7 +179,7 @@ public final class PerfDataUtil {
 
     /**
      * Close a pdh query
-     *
+     * 
      * @param q
      *            pointer to the query
      * @return true if successful
@@ -214,23 +214,22 @@ public final class PerfDataUtil {
      * @param query
      *            Pointer to the query to add the counter
      * @param path
-     *            String name of the PerfMon counter. For Vista+, must be in
-     *            English. Must localize this path for pre-Vista.
+     *            String name of the PerfMon counter
      * @param p
      *            Pointer to the counter
      * @return true if successful
      */
     public static boolean addCounter(WinNT.HANDLEByReference query, String path, WinNT.HANDLEByReference p) {
-<span class="nc bnc" id="L224" title="All 2 branches missed.">        int ret = IS_VISTA_OR_GREATER ? PDH.PdhAddEnglishCounter(query.getValue(), path, PZERO, p)</span>
-<span class="nc" id="L225">                : PDH.PdhAddCounter(query.getValue(), path, PZERO, p);</span>
-<span class="nc bnc" id="L226" title="All 2 branches missed.">        if (ret != WinError.ERROR_SUCCESS) {</span>
-<span class="nc bnc" id="L227" title="All 2 branches missed.">            if (LOG.isWarnEnabled()) {</span>
-<span class="nc" id="L228">                LOG.warn(&quot;Failed to add PDH Counter: {}, Error code: {}&quot;, path,</span>
-<span class="nc" id="L229">                        String.format(FormatUtil.formatError(ret)));</span>
+<span class="nc bnc" id="L223" title="All 2 branches missed.">        int ret = IS_VISTA_OR_GREATER ? PDH.PdhAddEnglishCounter(query.getValue(), path, PZERO, p)</span>
+<span class="nc" id="L224">                : PDH.PdhAddCounter(query.getValue(), path, PZERO, p);</span>
+<span class="nc bnc" id="L225" title="All 2 branches missed.">        if (ret != WinError.ERROR_SUCCESS) {</span>
+<span class="nc bnc" id="L226" title="All 2 branches missed.">            if (LOG.isWarnEnabled()) {</span>
+<span class="nc" id="L227">                LOG.warn(&quot;Failed to add PDH Counter: {}, Error code: {}&quot;, path,</span>
+<span class="nc" id="L228">                        String.format(FormatUtil.formatError(ret)));</span>
             }
-<span class="nc" id="L231">            return false;</span>
+<span class="nc" id="L230">            return false;</span>
         }
-<span class="nc" id="L233">        return true;</span>
+<span class="nc" id="L232">        return true;</span>
     }
 
     /**
@@ -241,7 +240,7 @@ public final class PerfDataUtil {
      * @return true if successful
      */
     public static boolean removeCounter(HANDLEByReference p) {
-<span class="nc bnc" id="L244" title="All 2 branches missed.">        return WinError.ERROR_SUCCESS == PDH.PdhRemoveCounter(p.getValue());</span>
+<span class="nc bnc" id="L243" title="All 2 branches missed.">        return WinError.ERROR_SUCCESS == PDH.PdhRemoveCounter(p.getValue());</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>

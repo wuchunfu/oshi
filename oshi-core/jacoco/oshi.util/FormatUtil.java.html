@@ -1,7 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FormatUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oshi-core</a> &gt; <a href="index.source.html" class="el_package">oshi.util</a> &gt; <span class="el_source">FormatUtil.java</span></div><h1>FormatUtil.java</h1><pre class="source lang-java linenums">/*
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>FormatUtil.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oshi-core</a> &gt; <a href="index.source.html" class="el_package">oshi.util</a> &gt; <span class="el_source">FormatUtil.java</span></div><h1>FormatUtil.java</h1><pre class="source lang-java linenums">/**
  * MIT License
  *
- * Copyright (c) 2010 - 2021 The OSHI Project Contributors: https://github.com/oshi/oshi/graphs/contributors
+ * Copyright (c) 2010 - 2020 The OSHI Project Contributors:
+ * https://github.com/oshi/oshi/graphs/contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the &quot;Software&quot;), to deal
@@ -9,9 +10,8 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -23,19 +23,20 @@
  */
 package oshi.util;
 
+import java.math.BigDecimal;
 import java.math.BigInteger;
+import java.math.RoundingMode;
 import java.util.concurrent.TimeUnit;
-
-import oshi.annotation.concurrent.ThreadSafe;
 
 /**
  * Formatting utility for appending units or converting between number types.
+ *
+ * @author dblock[at]dblock[dot]org
  */
-@ThreadSafe
-public final class FormatUtil {
+public class FormatUtil {
     /**
      * Binary prefixes, used in IEC Standard for naming bytes.
-     * (https://en.wikipedia.org/wiki/International_Electrotechnical_Commission)
+     * (http://en.wikipedia.org/wiki/International_Electrotechnical_Commission)
      *
      * Should be used for most representations of bytes
      */
@@ -50,19 +51,18 @@ public final class FormatUtil {
      * Decimal prefixes, used for Hz and other metric units and for bytes by hard
      * drive manufacturers
      */
-    private static final long KILO = 1_000L;
-    private static final long MEGA = 1_000_000L;
-    private static final long GIGA = 1_000_000_000L;
-    private static final long TERA = 1_000_000_000_000L;
-    private static final long PETA = 1_000_000_000_000_000L;
-    private static final long EXA = 1_000_000_000_000_000_000L;
+    private static final long KILO = 1000L;
+    private static final long MEGA = 1000000L;
+    private static final long GIGA = 1000000000L;
+    private static final long TERA = 1000000000000L;
+    private static final long PETA = 1000000000000000L;
+    private static final long EXA = 1000000000000000000L;
 
     /*
      * Two's complement reference: 2^64.
      */
-<span class="fc" id="L63">    private static final BigInteger TWOS_COMPLEMENT_REF = BigInteger.ONE.shiftLeft(64);</span>
+<span class="fc" id="L64">    private static final BigInteger TWOS_COMPLEMENT_REF = BigInteger.ONE.shiftLeft(64);</span>
 
-    /** Constant &lt;code&gt;HEX_ERROR=&quot;0x%08X&quot;&lt;/code&gt; */
     public static final String HEX_ERROR = &quot;0x%08X&quot;;
 
     private FormatUtil() {
@@ -160,7 +160,7 @@ public final class FormatUtil {
      */
     public static String formatValue(long value, String unit) {
 <span class="fc bfc" id="L162" title="All 2 branches covered.">        if (value &lt; KILO) {</span>
-<span class="fc" id="L163">            return String.format(&quot;%d %s&quot;, value, unit).trim();</span>
+<span class="fc" id="L163">            return String.format(&quot;%d %s&quot;, value, unit);</span>
 <span class="fc bfc" id="L164" title="All 2 branches covered.">        } else if (value &lt; MEGA) { // K</span>
 <span class="fc" id="L165">            return formatUnits(value, KILO, &quot;K&quot; + unit);</span>
 <span class="fc bfc" id="L166" title="All 2 branches covered.">        } else if (value &lt; GIGA) { // M</span>
@@ -196,6 +196,20 @@ public final class FormatUtil {
     }
 
     /**
+     * Round to certain number of decimals.
+     *
+     * @param d
+     *            Number to be rounded
+     * @param decimalPlace
+     *            Number of decimal places to round to
+     * @return rounded result
+     */
+    public static float round(float d, int decimalPlace) {
+<span class="fc" id="L208">        final BigDecimal bd = new BigDecimal(Float.toString(d)).setScale(decimalPlace, RoundingMode.HALF_UP);</span>
+<span class="fc" id="L209">        return bd.floatValue();</span>
+    }
+
+    /**
      * Convert unsigned int to signed long.
      *
      * @param x
@@ -203,7 +217,7 @@ public final class FormatUtil {
      * @return long value of x unsigned
      */
     public static long getUnsignedInt(int x) {
-<span class="fc" id="L206">        return x &amp; 0x0000_0000_ffff_ffffL;</span>
+<span class="fc" id="L220">        return x &amp; 0x00000000ffffffffL;</span>
     }
 
     /**
@@ -216,10 +230,10 @@ public final class FormatUtil {
      * @return the string representation of the unsigned integer
      */
     public static String toUnsignedString(int i) {
-<span class="fc bfc" id="L219" title="All 2 branches covered.">        if (i &gt;= 0) {</span>
-<span class="fc" id="L220">            return Integer.toString(i);</span>
+<span class="fc bfc" id="L233" title="All 2 branches covered.">        if (i &gt;= 0) {</span>
+<span class="fc" id="L234">            return Integer.toString(i);</span>
         }
-<span class="fc" id="L222">        return Long.toString(getUnsignedInt(i));</span>
+<span class="fc" id="L236">        return Long.toString(getUnsignedInt(i));</span>
     }
 
     /**
@@ -232,32 +246,21 @@ public final class FormatUtil {
      * @return the string representation of the unsigned long
      */
     public static String toUnsignedString(long l) {
-<span class="fc bfc" id="L235" title="All 2 branches covered.">        if (l &gt;= 0) {</span>
-<span class="fc" id="L236">            return Long.toString(l);</span>
+<span class="fc bfc" id="L249" title="All 2 branches covered.">        if (l &gt;= 0) {</span>
+<span class="fc" id="L250">            return Long.toString(l);</span>
         }
-<span class="fc" id="L238">        return BigInteger.valueOf(l).add(TWOS_COMPLEMENT_REF).toString();</span>
+<span class="fc" id="L252">        return BigInteger.valueOf(l).add(TWOS_COMPLEMENT_REF).toString();</span>
     }
 
     /**
      * Translate an integer error code to its hex notation
-     *
+     * 
      * @param errorCode
      *            The error code
      * @return A string representing the error as 0x....
      */
     public static String formatError(int errorCode) {
-<span class="fc" id="L249">        return String.format(HEX_ERROR, errorCode);</span>
-    }
-
-    /**
-     * Rounds a floating point number to the nearest integer
-     *
-     * @param x
-     *            the floating point number
-     * @return the integer
-     */
-    public static int roundToInt(double x) {
-<span class="fc" id="L260">        return (int) Math.round(x);</span>
+<span class="fc" id="L263">        return String.format(HEX_ERROR, errorCode);</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
