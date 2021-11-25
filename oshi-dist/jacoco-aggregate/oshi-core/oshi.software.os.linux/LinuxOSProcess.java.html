@@ -418,7 +418,7 @@ public class LinuxOSProcess extends AbstractOSProcess {
 <span class="nc" id="L418">        PPID(4), MINOR_FAULTS(10), MAJOR_FAULTS(12), USER_TIME(14), KERNEL_TIME(15), PRIORITY(18), THREAD_COUNT(20),</span>
 <span class="nc" id="L419">        START_TIME(22), VSZ(23), RSS(24);</span>
 
-        private int order;
+        private final int order;
 
         public int getOrder() {
 <span class="nc" id="L424">            return this.order;</span>

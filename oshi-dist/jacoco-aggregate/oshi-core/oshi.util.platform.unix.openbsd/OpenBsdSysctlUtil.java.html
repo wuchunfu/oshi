@@ -65,7 +65,7 @@ public final class OpenBsdSysctlUtil {
 <span class="nc" id="L65">        size_t.ByReference size = new size_t.ByReference(new size_t(OpenBsdLibc.INT_SIZE));</span>
 <span class="nc" id="L66">        Pointer p = new Memory(size.longValue());</span>
 <span class="nc bnc" id="L67" title="All 2 branches missed.">        if (0 != OpenBsdLibc.INSTANCE.sysctl(name, name.length, p, size, null, size_t.ZERO)) {</span>
-<span class="nc" id="L68">            LOG.error(SYSCTL_FAIL, name, Native.getLastError());</span>
+<span class="nc" id="L68">            LOG.warn(SYSCTL_FAIL, name, Native.getLastError());</span>
 <span class="nc" id="L69">            return def;</span>
         }
 <span class="nc" id="L71">        return p.getInt(0);</span>
