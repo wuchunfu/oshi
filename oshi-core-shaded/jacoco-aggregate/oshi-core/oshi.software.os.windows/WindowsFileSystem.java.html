@@ -181,7 +181,7 @@ public class WindowsFileSystem extends AbstractFileSystem {
 <span class="nc" id="L181">        aVolume = new char[BUFSIZE];</span>
 
 <span class="nc" id="L183">        hVol = Kernel32.INSTANCE.FindFirstVolume(aVolume, BUFSIZE);</span>
-<span class="nc bnc" id="L184" title="All 2 branches missed.">        if (hVol == WinBase.INVALID_HANDLE_VALUE) {</span>
+<span class="nc bnc" id="L184" title="All 2 branches missed.">        if (WinBase.INVALID_HANDLE_VALUE.equals(hVol)) {</span>
 <span class="nc" id="L185">            return fs;</span>
         }
         try {

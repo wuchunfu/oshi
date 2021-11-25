@@ -91,7 +91,7 @@ public final class DeviceTree {
 <span class="nc" id="L91">        Map&lt;Integer, String&gt; mfgMap = new HashMap&lt;&gt;();</span>
         // Get device IDs for the top level devices
 <span class="nc" id="L93">        HANDLE hDevInfo = SA.SetupDiGetClassDevs(guidDevInterface, null, null, DIGCF_DEVICEINTERFACE | DIGCF_PRESENT);</span>
-<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (hDevInfo != INVALID_HANDLE_VALUE) {</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (!INVALID_HANDLE_VALUE.equals(hDevInfo)) {</span>
             try {
                 // Create re-usable native allocations
 <span class="nc" id="L97">                Memory buf = new Memory(MAX_PATH);</span>

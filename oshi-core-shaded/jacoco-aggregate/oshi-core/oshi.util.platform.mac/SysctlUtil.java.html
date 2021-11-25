@@ -61,7 +61,7 @@ public final class SysctlUtil {
 <span class="nc" id="L61">        size_t.ByReference size = new size_t.ByReference(com.sun.jna.platform.mac.SystemB.INT_SIZE);</span>
 <span class="nc" id="L62">        Pointer p = new Memory(size.longValue());</span>
 <span class="nc bnc" id="L63" title="All 2 branches missed.">        if (0 != SystemB.INSTANCE.sysctlbyname(name, p, size, null, size_t.ZERO)) {</span>
-<span class="nc" id="L64">            LOG.error(SYSCTL_FAIL, name, Native.getLastError());</span>
+<span class="nc" id="L64">            LOG.warn(SYSCTL_FAIL, name, Native.getLastError());</span>
 <span class="nc" id="L65">            return def;</span>
         }
 <span class="nc" id="L67">        return p.getInt(0);</span>
