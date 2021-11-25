@@ -1,8 +1,7 @@
-<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WindowsUsbDevice.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oshi-core</a> &gt; <a href="index.source.html" class="el_package">oshi.hardware.platform.windows</a> &gt; <span class="el_source">WindowsUsbDevice.java</span></div><h1>WindowsUsbDevice.java</h1><pre class="source lang-java linenums">/**
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>WindowsUsbDevice.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">oshi-core</a> &gt; <a href="index.source.html" class="el_package">oshi.hardware.platform.windows</a> &gt; <span class="el_source">WindowsUsbDevice.java</span></div><h1>WindowsUsbDevice.java</h1><pre class="source lang-java linenums">/*
  * MIT License
  *
- * Copyright (c) 2010 - 2020 The OSHI Project Contributors:
- * https://github.com/oshi/oshi/graphs/contributors
+ * Copyright (c) 2010 - 2021 The OSHI Project Contributors: https://github.com/oshi/oshi/graphs/contributors
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the &quot;Software&quot;), to deal
@@ -10,8 +9,9 @@
  * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
  * copies of the Software, and to permit persons to whom the Software is
  * furnished to do so, subject to the following conditions:
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
  *
  * THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
@@ -25,285 +25,137 @@ package oshi.hardware.platform.windows;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Map.Entry;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import com.sun.jna.platform.win32.Guid.GUID;
 
-import com.sun.jna.platform.win32.Cfgmgr32; // NOSONAR squid:S1191
-import com.sun.jna.platform.win32.Cfgmgr32Util;
-import com.sun.jna.platform.win32.COM.WbemcliUtil.WmiQuery;
-import com.sun.jna.platform.win32.COM.WbemcliUtil.WmiResult;
-import com.sun.jna.ptr.IntByReference;
-
+import oshi.annotation.concurrent.Immutable;
+import oshi.driver.windows.DeviceTree;
 import oshi.hardware.UsbDevice;
 import oshi.hardware.common.AbstractUsbDevice;
-import oshi.util.MapUtil;
 import oshi.util.ParseUtil;
-import oshi.util.platform.windows.WmiQueryHandler;
-import oshi.util.platform.windows.WmiUtil;
+import oshi.util.tuples.Quintet;
+import oshi.util.tuples.Triplet;
 
+/**
+ * Windows Usb Device
+ */
+@Immutable
 public class WindowsUsbDevice extends AbstractUsbDevice {
 
-    private static final long serialVersionUID = 2L;
-
-<span class="nc" id="L56">    private static final Logger LOG = LoggerFactory.getLogger(WindowsUsbDevice.class);</span>
-
-<span class="nc" id="L58">    enum USBControllerProperty {</span>
-<span class="nc" id="L59">        PNPDEVICEID;</span>
-    }
-
-    // List of controllers
-<span class="nc" id="L63">    private static List&lt;String&gt; controllerDeviceIds = null;</span>
-
-<span class="nc" id="L65">    enum PnPEntityProperty {</span>
-<span class="nc" id="L66">        NAME, MANUFACTURER, PNPDEVICEID;</span>
-    }
-
-    private static final String PNPENTITY_BASE_CLASS = &quot;Win32_PnPEntity&quot;;
-<span class="nc" id="L70">    private static final WmiQuery&lt;PnPEntityProperty&gt; PNPENTITY_QUERY = new WmiQuery&lt;PnPEntityProperty&gt;(null,</span>
-            PnPEntityProperty.class);
-
-<span class="nc" id="L73">    enum DiskDriveProperty {</span>
-<span class="nc" id="L74">        PNPDEVICEID, SERIALNUMBER;</span>
-    }
-
-    private static final String DISKDRIVE_BASE_CLASS = &quot;Win32_DiskDrive&quot;;
-<span class="nc" id="L78">    private static final WmiQuery&lt;DiskDriveProperty&gt; DISKDRIVE_QUERY = new WmiQuery&lt;DiskDriveProperty&gt;(null,</span>
-            DiskDriveProperty.class);
-
-<span class="nc" id="L81">    private static final Pattern VENDOR_PRODUCT_ID = Pattern</span>
-<span class="nc" id="L82">            .compile(&quot;.*(?:VID|VEN)_(\\p{XDigit}{4})&amp;(?:PID|DEV)_(\\p{XDigit}{4}).*&quot;);</span>
-
-    // Map to store information using PNPDeviceID as the key
-<span class="nc" id="L85">    private static Map&lt;String, WindowsUsbDevice&gt; usbDeviceCache = new HashMap&lt;String, WindowsUsbDevice&gt;();</span>
+<span class="nc" id="L50">    private static final GUID GUID_DEVINTERFACE_USB_HOST_CONTROLLER = new GUID(</span>
+            &quot;{3ABF6F2D-71C4-462A-8A92-1E6861E6AF27}&quot;);
 
     public WindowsUsbDevice(String name, String vendor, String vendorId, String productId, String serialNumber,
-            UsbDevice[] connectedDevices) {
-<span class="nc" id="L89">        super(name, vendor, vendorId, productId, serialNumber, connectedDevices);</span>
-<span class="nc" id="L90">    }</span>
+            String uniqueDeviceId, List&lt;UsbDevice&gt; connectedDevices) {
+<span class="nc" id="L55">        super(name, vendor, vendorId, productId, serialNumber, uniqueDeviceId, connectedDevices);</span>
+<span class="nc" id="L56">    }</span>
 
     /**
-     * {@inheritDoc}
+     * Instantiates a list of {@link oshi.hardware.UsbDevice} objects, representing
+     * devices connected via a usb port (including internal devices).
+     * &lt;p&gt;
+     * If the value of {@code tree} is true, the top level devices returned from
+     * this method are the USB Controllers; connected hubs and devices in its device
+     * tree share that controller's bandwidth. If the value of {@code tree} is
+     * false, USB devices (not controllers) are listed in a single flat list.
+     *
+     * @param tree
+     *            If true, returns a list of controllers, which requires recursive
+     *            iteration of connected devices. If false, returns a flat list of
+     *            devices excluding controllers.
+     * @return a list of {@link oshi.hardware.UsbDevice} objects.
      */
-    public static UsbDevice[] getUsbDevices(boolean tree) {
-<span class="nc" id="L96">        UsbDevice[] devices = getUsbDevices();</span>
-<span class="nc bnc" id="L97" title="All 2 branches missed.">        if (tree) {</span>
-<span class="nc" id="L98">            return devices;</span>
+    public static List&lt;UsbDevice&gt; getUsbDevices(boolean tree) {
+<span class="nc" id="L74">        List&lt;UsbDevice&gt; devices = queryUsbDevices();</span>
+<span class="nc bnc" id="L75" title="All 2 branches missed.">        if (tree) {</span>
+<span class="nc" id="L76">            return devices;</span>
         }
-<span class="nc" id="L100">        List&lt;UsbDevice&gt; deviceList = new ArrayList&lt;UsbDevice&gt;();</span>
+<span class="nc" id="L78">        List&lt;UsbDevice&gt; deviceList = new ArrayList&lt;&gt;();</span>
         // Top level is controllers; they won't be added to the list, but all
         // their connected devices will be
-<span class="nc bnc" id="L103" title="All 2 branches missed.">        for (UsbDevice device : devices) {</span>
-<span class="nc" id="L104">            addDevicesToList(deviceList, device.getConnectedDevices());</span>
-        }
-<span class="nc" id="L106">        return deviceList.toArray(new UsbDevice[deviceList.size()]);</span>
+<span class="nc bnc" id="L81" title="All 2 branches missed.">        for (UsbDevice device : devices) {</span>
+            // Recursively add all child devices
+<span class="nc" id="L83">            addDevicesToList(deviceList, device.getConnectedDevices());</span>
+<span class="nc" id="L84">        }</span>
+<span class="nc" id="L85">        return deviceList;</span>
     }
 
-    private static void addDevicesToList(List&lt;UsbDevice&gt; deviceList, UsbDevice[] connectedDevices) {
-<span class="nc bnc" id="L110" title="All 2 branches missed.">        for (UsbDevice device : connectedDevices) {</span>
-<span class="nc" id="L111">            deviceList.add(new WindowsUsbDevice(device.getName(), device.getVendor(), device.getVendorId(),</span>
-<span class="nc" id="L112">                    device.getProductId(), device.getSerialNumber(), new UsbDevice[0]));</span>
-<span class="nc" id="L113">            addDevicesToList(deviceList, device.getConnectedDevices());</span>
-        }
-<span class="nc" id="L115">    }</span>
+    private static void addDevicesToList(List&lt;UsbDevice&gt; deviceList, List&lt;UsbDevice&gt; list) {
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        for (UsbDevice device : list) {</span>
+<span class="nc" id="L90">            deviceList.add(new WindowsUsbDevice(device.getName(), device.getVendor(), device.getVendorId(),</span>
+<span class="nc" id="L91">                    device.getProductId(), device.getSerialNumber(), device.getUniqueDeviceId(),</span>
+<span class="nc" id="L92">                    Collections.emptyList()));</span>
+<span class="nc" id="L93">            addDevicesToList(deviceList, device.getConnectedDevices());</span>
+<span class="nc" id="L94">        }</span>
+<span class="nc" id="L95">    }</span>
 
-    private static UsbDevice[] getUsbDevices() {
-        // Map to build the recursive tree structure
-<span class="nc" id="L119">        Map&lt;String, List&lt;String&gt;&gt; deviceTreeMap = new HashMap&lt;String, List&lt;String&gt;&gt;();</span>
-        // Track devices seen in the process
-<span class="nc" id="L121">        Set&lt;String&gt; devicesSeen = new HashSet&lt;String&gt;();</span>
+    private static List&lt;UsbDevice&gt; queryUsbDevices() {
+<span class="nc" id="L98">        Quintet&lt;Set&lt;Integer&gt;, Map&lt;Integer, Integer&gt;, Map&lt;Integer, String&gt;, Map&lt;Integer, String&gt;, Map&lt;Integer, String&gt;&gt; controllerDevices = DeviceTree</span>
+<span class="nc" id="L99">                .queryDeviceTree(GUID_DEVINTERFACE_USB_HOST_CONTROLLER);</span>
+<span class="nc" id="L100">        Map&lt;Integer, Integer&gt; parentMap = controllerDevices.getB();</span>
+<span class="nc" id="L101">        Map&lt;Integer, String&gt; nameMap = controllerDevices.getC();</span>
+<span class="nc" id="L102">        Map&lt;Integer, String&gt; deviceIdMap = controllerDevices.getD();</span>
+<span class="nc" id="L103">        Map&lt;Integer, String&gt; mfgMap = controllerDevices.getE();</span>
 
-        // Navigate the device tree to track what devices are present
-<span class="nc" id="L124">        List&lt;WindowsUsbDevice&gt; controllerDevices = new ArrayList&lt;WindowsUsbDevice&gt;();</span>
-<span class="nc" id="L125">        WmiQueryHandler wmiQueryHandler = WmiQueryHandler.createInstance();</span>
-<span class="nc" id="L126">        List&lt;String&gt; controllerDeviceIdList = getControllerDeviceIdList(wmiQueryHandler);</span>
-<span class="nc bnc" id="L127" title="All 2 branches missed.">        for (String controllerDeviceId : controllerDeviceIdList) {</span>
-<span class="nc" id="L128">            putChildrenInDeviceTree(controllerDeviceId, 0, deviceTreeMap, devicesSeen);</span>
-<span class="nc" id="L129">        }</span>
-        // remove from cache if no longer present and add to cache if present
-        // but not in cache
-<span class="nc" id="L132">        updateDeviceCache(devicesSeen, wmiQueryHandler);</span>
+<span class="nc" id="L105">        List&lt;UsbDevice&gt; usbDevices = new ArrayList&lt;&gt;();</span>
         // recursively build results
-<span class="nc bnc" id="L134" title="All 2 branches missed.">        for (String controllerDeviceId : controllerDeviceIdList) {</span>
-<span class="nc" id="L135">            WindowsUsbDevice deviceAndChildren = getDeviceAndChildren(controllerDeviceId, &quot;0000&quot;, &quot;0000&quot;,</span>
-                    deviceTreeMap);
-<span class="nc bnc" id="L137" title="All 2 branches missed.">            if (deviceAndChildren != null) {</span>
-<span class="nc" id="L138">                controllerDevices.add(deviceAndChildren);</span>
+<span class="nc bnc" id="L107" title="All 2 branches missed.">        for (Integer controllerDevice : controllerDevices.getA()) {</span>
+<span class="nc" id="L108">            WindowsUsbDevice deviceAndChildren = queryDeviceAndChildren(controllerDevice, parentMap, nameMap,</span>
+                    deviceIdMap, mfgMap, &quot;0000&quot;, &quot;0000&quot;, &quot;&quot;);
+<span class="nc bnc" id="L110" title="All 2 branches missed.">            if (deviceAndChildren != null) {</span>
+<span class="nc" id="L111">                usbDevices.add(deviceAndChildren);</span>
             }
-<span class="nc" id="L140">        }</span>
-<span class="nc" id="L141">        return controllerDevices.toArray(new WindowsUsbDevice[controllerDevices.size()]);</span>
+<span class="nc" id="L113">        }</span>
+<span class="nc" id="L114">        return usbDevices;</span>
     }
 
-    private static void updateDeviceCache(Set&lt;String&gt; devicesSeen, WmiQueryHandler wmiQueryHandler) {
-        // The deviceCache stores UsbDevices that we have already returned
-        // Remove devices no longer in tree
-<span class="nc" id="L147">        Set&lt;String&gt; devicesToRemove = new HashSet&lt;String&gt;(usbDeviceCache.keySet());</span>
-<span class="nc" id="L148">        devicesToRemove.removeAll(devicesSeen);</span>
-<span class="nc bnc" id="L149" title="All 2 branches missed.">        for (String deviceID : devicesToRemove) {</span>
-<span class="nc" id="L150">            usbDeviceCache.remove(deviceID);</span>
-<span class="nc" id="L151">            LOG.debug(&quot;Removing {} from USB device cache.&quot;, deviceID);</span>
-<span class="nc" id="L152">        }</span>
-
-        // Add devices not in the tree
-<span class="nc" id="L155">        Set&lt;String&gt; devicesToAdd = new HashSet&lt;String&gt;(devicesSeen);</span>
-<span class="nc" id="L156">        devicesToAdd.removeAll(usbDeviceCache.keySet());</span>
-<span class="nc bnc" id="L157" title="All 2 branches missed.">        if (!devicesToAdd.isEmpty()) {</span>
-<span class="nc" id="L158">            StringBuilder sb = new StringBuilder();</span>
-<span class="nc" id="L159">            boolean first = true;</span>
-<span class="nc bnc" id="L160" title="All 2 branches missed.">            for (String deviceID : devicesToAdd) {</span>
-<span class="nc bnc" id="L161" title="All 2 branches missed.">                if (first) {</span>
-<span class="nc" id="L162">                    sb.append(&quot; WHERE (PnPDeviceID=\&quot;&quot;);</span>
-<span class="nc" id="L163">                    first = false;</span>
-                } else {
-<span class="nc" id="L165">                    sb.append(&quot; OR (PnPDeviceID=\&quot;&quot;);</span>
-                }
-<span class="nc" id="L167">                sb.append(deviceID).append(&quot;\&quot;)&quot;);</span>
-<span class="nc" id="L168">            }</span>
-<span class="nc" id="L169">            String whereClause = sb.toString();</span>
-            // Query Win32_PnPEntity to populate the maps
-<span class="nc" id="L171">            PNPENTITY_QUERY.setWmiClassName(PNPENTITY_BASE_CLASS + whereClause);</span>
-<span class="nc" id="L172">            WmiResult&lt;PnPEntityProperty&gt; pnpEntity = wmiQueryHandler.queryWMI(PNPENTITY_QUERY);</span>
-<span class="nc bnc" id="L173" title="All 2 branches missed.">            for (int i = 0; i &lt; pnpEntity.getResultCount(); i++) {</span>
-<span class="nc" id="L174">                String pnpDeviceID = WmiUtil.getString(pnpEntity, PnPEntityProperty.PNPDEVICEID, i);</span>
-<span class="nc" id="L175">                String name = WmiUtil.getString(pnpEntity, PnPEntityProperty.NAME, i);</span>
-<span class="nc" id="L176">                String vendor = WmiUtil.getString(pnpEntity, PnPEntityProperty.MANUFACTURER, i);</span>
-<span class="nc" id="L177">                WindowsUsbDevice device = new WindowsUsbDevice(name, vendor, null, null, &quot;&quot;, new WindowsUsbDevice[0]);</span>
-<span class="nc" id="L178">                usbDeviceCache.put(pnpDeviceID, device);</span>
-<span class="nc" id="L179">                LOG.debug(&quot;Adding {} to USB device cache.&quot;, pnpDeviceID);</span>
-            }
-            // Get serial # for disk drives or other physical media
-<span class="nc" id="L182">            DISKDRIVE_QUERY.setWmiClassName(DISKDRIVE_BASE_CLASS + whereClause);</span>
-<span class="nc" id="L183">            WmiResult&lt;DiskDriveProperty&gt; serialNumber = wmiQueryHandler.queryWMI(DISKDRIVE_QUERY);</span>
-<span class="nc bnc" id="L184" title="All 2 branches missed.">            for (int i = 0; i &lt; serialNumber.getResultCount(); i++) {</span>
-<span class="nc" id="L185">                String pnpDeviceID = WmiUtil.getString(serialNumber, DiskDriveProperty.PNPDEVICEID, i);</span>
-<span class="nc bnc" id="L186" title="All 2 branches missed.">                if (usbDeviceCache.containsKey(pnpDeviceID)) {</span>
-<span class="nc" id="L187">                    WindowsUsbDevice device = usbDeviceCache.get(pnpDeviceID);</span>
-<span class="nc" id="L188">                    device.serialNumber = ParseUtil</span>
-<span class="nc" id="L189">                            .hexStringToString(WmiUtil.getString(serialNumber, DiskDriveProperty.SERIALNUMBER, i));</span>
-                }
+    private static WindowsUsbDevice queryDeviceAndChildren(Integer device, Map&lt;Integer, Integer&gt; parentMap,
+            Map&lt;Integer, String&gt; nameMap, Map&lt;Integer, String&gt; deviceIdMap, Map&lt;Integer, String&gt; mfgMap, String vid,
+            String pid, String parentSerial) {
+        // Parse vendor and product IDs from the device ID
+        // If this doesn't work, use the IDs from the parent
+<span class="nc" id="L122">        String vendorId = vid;</span>
+<span class="nc" id="L123">        String productId = pid;</span>
+<span class="nc" id="L124">        String serial = parentSerial;</span>
+<span class="nc" id="L125">        Triplet&lt;String, String, String&gt; idsAndSerial = ParseUtil</span>
+<span class="nc" id="L126">                .parseDeviceIdToVendorProductSerial(deviceIdMap.get(device));</span>
+<span class="nc bnc" id="L127" title="All 2 branches missed.">        if (idsAndSerial != null) {</span>
+<span class="nc" id="L128">            vendorId = idsAndSerial.getA();</span>
+<span class="nc" id="L129">            productId = idsAndSerial.getB();</span>
+<span class="nc" id="L130">            serial = idsAndSerial.getC();</span>
+<span class="nc bnc" id="L131" title="All 6 branches missed.">            if (serial.isEmpty() &amp;&amp; vendorId.equals(vid) &amp;&amp; productId.equals(pid)) {</span>
+<span class="nc" id="L132">                serial = parentSerial;</span>
             }
         }
-<span class="nc" id="L193">    }</span>
-
-    /**
-     * Navigates the Device Tree to place all children PNPDeviceIDs into the map for
-     * the specified deviceID. Recursively adds children's children, etc.
-     * 
-     * @param deviceId
-     *            The device to add respective children to the map
-     * @param deviceInstance
-     *            The device instance (devnode handle), if known. If set to 0, the
-     *            code will search for a match.
-     * @param deviceTreeMap
-     *            The overall device tree map that starts at the controllers
-     * @param devicesSeen
-     *            Devices we've seen so we can add/remove from cache later
-     */
-    private static void putChildrenInDeviceTree(String deviceId, int deviceInstance,
-            Map&lt;String, List&lt;String&gt;&gt; deviceTreeMap, Set&lt;String&gt; devicesSeen) {
-<span class="nc" id="L211">        devicesSeen.add(deviceId);</span>
-        // If no devInst provided, find it
-<span class="nc" id="L213">        int devInst = deviceInstance;</span>
-<span class="nc bnc" id="L214" title="All 2 branches missed.">        if (devInst == 0) {</span>
-<span class="nc" id="L215">            IntByReference pdnDevInst = new IntByReference();</span>
-<span class="nc" id="L216">            Cfgmgr32.INSTANCE.CM_Locate_DevNode(pdnDevInst, deviceId, 0);</span>
-<span class="nc" id="L217">            devInst = pdnDevInst.getValue();</span>
-        }
-        // Now iterate the children. Call CM_Get_Child to get first child
-<span class="nc" id="L220">        IntByReference child = new IntByReference();</span>
-<span class="nc bnc" id="L221" title="All 2 branches missed.">        if (0 == Cfgmgr32.INSTANCE.CM_Get_Child(child, devInst, 0)) {</span>
-            // Add first child to a list
-<span class="nc" id="L223">            List&lt;String&gt; childList = new ArrayList&lt;String&gt;();</span>
-<span class="nc" id="L224">            String childId = Cfgmgr32Util.CM_Get_Device_ID(child.getValue());</span>
-<span class="nc" id="L225">            childList.add(childId);</span>
-<span class="nc" id="L226">            deviceTreeMap.put(deviceId, childList);</span>
-<span class="nc" id="L227">            putChildrenInDeviceTree(childId, child.getValue(), deviceTreeMap, devicesSeen);</span>
-            // Find any other children
-<span class="nc" id="L229">            IntByReference sibling = new IntByReference();</span>
-<span class="nc bnc" id="L230" title="All 2 branches missed.">            while (0 == Cfgmgr32.INSTANCE.CM_Get_Sibling(sibling, child.getValue(), 0)) {</span>
-                // Add to the list
-<span class="nc" id="L232">                String siblingId = Cfgmgr32Util.CM_Get_Device_ID(sibling.getValue());</span>
-<span class="nc" id="L233">                deviceTreeMap.get(deviceId).add(siblingId);</span>
-<span class="nc" id="L234">                putChildrenInDeviceTree(siblingId, sibling.getValue(), deviceTreeMap, devicesSeen);</span>
-                // Make this sibling the new child to find other siblings
-<span class="nc" id="L236">                child = sibling;</span>
-<span class="nc" id="L237">            }</span>
-        }
-<span class="nc" id="L239">    }</span>
-
-    /**
-     * Recursively creates WindowsUsbDevices by fetching information from maps to
-     * populate fields
-     *
-     * @param hubDeviceId
-     *            The PNPdeviceID of this device.
-     * @param vid
-     *            The default (parent) vendor ID
-     * @param pid
-     *            The default (parent) product ID
-     * @param deviceTreeMap
-     * @return A WindowsUsbDevice corresponding to this deviceID, or null if unable
-     *         to find
-     */
-    private static WindowsUsbDevice getDeviceAndChildren(String hubDeviceId, String vid, String pid,
-            Map&lt;String, List&lt;String&gt;&gt; deviceTreeMap) {
-<span class="nc" id="L257">        String vendorId = vid;</span>
-<span class="nc" id="L258">        String productId = pid;</span>
-<span class="nc" id="L259">        Matcher m = VENDOR_PRODUCT_ID.matcher(hubDeviceId);</span>
-<span class="nc bnc" id="L260" title="All 2 branches missed.">        if (m.matches()) {</span>
-<span class="nc" id="L261">            vendorId = m.group(1).toLowerCase();</span>
-<span class="nc" id="L262">            productId = m.group(2).toLowerCase();</span>
-        }
-<span class="nc" id="L264">        List&lt;String&gt; pnpDeviceIds = MapUtil.getOrDefault(deviceTreeMap, hubDeviceId, new ArrayList&lt;String&gt;());</span>
-<span class="nc" id="L265">        List&lt;WindowsUsbDevice&gt; usbDevices = new ArrayList&lt;WindowsUsbDevice&gt;();</span>
-<span class="nc bnc" id="L266" title="All 2 branches missed.">        for (String pnpDeviceId : pnpDeviceIds) {</span>
-<span class="nc" id="L267">            WindowsUsbDevice deviceAndChildren = getDeviceAndChildren(pnpDeviceId, vendorId, productId, deviceTreeMap);</span>
-<span class="nc bnc" id="L268" title="All 2 branches missed.">            if (deviceAndChildren != null) {</span>
-<span class="nc" id="L269">                usbDevices.add(deviceAndChildren);</span>
+        // Iterate the parent map looking for children
+<span class="nc" id="L136">        Set&lt;Integer&gt; childDeviceSet = parentMap.entrySet().stream().filter(e -&gt; e.getValue().equals(device))</span>
+<span class="nc" id="L137">                .map(Entry::getKey).collect(Collectors.toSet());</span>
+        // Recursively find those children and put in a list
+<span class="nc" id="L139">        List&lt;UsbDevice&gt; childDevices = new ArrayList&lt;&gt;();</span>
+<span class="nc bnc" id="L140" title="All 2 branches missed.">        for (Integer child : childDeviceSet) {</span>
+<span class="nc" id="L141">            WindowsUsbDevice deviceAndChildren = queryDeviceAndChildren(child, parentMap, nameMap, deviceIdMap, mfgMap,</span>
+                    vendorId, productId, serial);
+<span class="nc bnc" id="L143" title="All 2 branches missed.">            if (deviceAndChildren != null) {</span>
+<span class="nc" id="L144">                childDevices.add(deviceAndChildren);</span>
             }
-<span class="nc" id="L271">        }</span>
-<span class="nc" id="L272">        Collections.sort(usbDevices);</span>
-<span class="nc bnc" id="L273" title="All 2 branches missed.">        if (usbDeviceCache.containsKey(hubDeviceId)) {</span>
-<span class="nc" id="L274">            WindowsUsbDevice device = usbDeviceCache.get(hubDeviceId);</span>
-<span class="nc bnc" id="L275" title="All 2 branches missed.">            if (device.name.isEmpty()) {</span>
-<span class="nc" id="L276">                device.name = vendorId + &quot;:&quot; + productId;</span>
+<span class="nc" id="L146">        }</span>
+<span class="nc" id="L147">        Collections.sort(childDevices);</span>
+        // Finally construct the object and return
+<span class="nc bnc" id="L149" title="All 2 branches missed.">        if (nameMap.containsKey(device)) {</span>
+<span class="nc" id="L150">            String name = nameMap.get(device);</span>
+<span class="nc bnc" id="L151" title="All 2 branches missed.">            if (name.isEmpty()) {</span>
+<span class="nc" id="L152">                name = vendorId + &quot;:&quot; + productId;</span>
             }
-<span class="nc" id="L278">            device.vendorId = vendorId;</span>
-<span class="nc" id="L279">            device.productId = productId;</span>
-<span class="nc" id="L280">            device.connectedDevices = usbDevices.toArray(new WindowsUsbDevice[usbDevices.size()]);</span>
-<span class="nc" id="L281">            return device;</span>
+<span class="nc" id="L154">            String deviceId = deviceIdMap.get(device);</span>
+<span class="nc" id="L155">            String mfg = mfgMap.get(device);</span>
+<span class="nc" id="L156">            return new WindowsUsbDevice(name, mfg, vendorId, productId, serial, deviceId, childDevices);</span>
         }
-<span class="nc" id="L283">        return null;</span>
-    }
-
-    /**
-     * Queries the USB Controller list, which doesn't change so we only need to
-     * query it once
-     * 
-     * @param wmiQueryHandler
-     * 
-     * @return A list of Strings of USB Controller PNPDeviceIDs
-     */
-    private static List&lt;String&gt; getControllerDeviceIdList(WmiQueryHandler wmiQueryHandler) {
-<span class="nc bnc" id="L295" title="All 2 branches missed.">        if (controllerDeviceIds == null) {</span>
-<span class="nc" id="L296">            controllerDeviceIds = new ArrayList&lt;String&gt;();</span>
-            // One time lookup of USB Controller PnP Device IDs which don't
-            // change
-<span class="nc" id="L299">            WmiQuery&lt;USBControllerProperty&gt; usbControllerQuery = new WmiQuery&lt;USBControllerProperty&gt;(</span>
-                    &quot;Win32_USBController&quot;, USBControllerProperty.class);
-<span class="nc" id="L301">            WmiResult&lt;USBControllerProperty&gt; usbController = wmiQueryHandler.queryWMI(usbControllerQuery);</span>
-<span class="nc bnc" id="L302" title="All 2 branches missed.">            for (int i = 0; i &lt; usbController.getResultCount(); i++) {</span>
-<span class="nc" id="L303">                controllerDeviceIds.add(WmiUtil.getString(usbController, USBControllerProperty.PNPDEVICEID, i));</span>
-            }
-        }
-<span class="nc" id="L306">        return controllerDeviceIds;</span>
+<span class="nc" id="L158">        return null;</span>
     }
 }
-</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.5.201910111838</span></div></body></html>
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.7.202105040129</span></div></body></html>
