@@ -78,7 +78,7 @@ public final class PsInfo {
 <span class="nc" id="L78">        PR_BINDPRO(Native.POINTER_SIZE), // processor to which thread is bound</span>
 <span class="nc" id="L79">        SIZE(0);</span>
 
-        private int size;
+        private final int size;
 
 <span class="nc" id="L83">        LwpsInfoT(int bytes) {</span>
 <span class="nc" id="L84">            size = bytes;</span>
@@ -121,7 +121,7 @@ public final class PsInfo {
 <span class="nc" id="L121">        PR_LWP(lwpsInfoOffsets.get(LwpsInfoT.SIZE)), // &quot;representative&quot; thread info</span>
 <span class="nc" id="L122">        SIZE(0);</span>
 
-        private int size;
+        private final int size;
 
 <span class="nc" id="L126">        PsInfoT(int bytes) {</span>
 <span class="nc" id="L127">            size = bytes;</span>

@@ -261,8 +261,8 @@
 <a class="jxr_linenumber" name="L253" href="#L253">253</a>         }
 <a class="jxr_linenumber" name="L254" href="#L254">254</a>         Pointer p = KS.kstat_data_lookup(ksp, name);
 <a class="jxr_linenumber" name="L255" href="#L255">255</a>         <strong class="jxr_keyword">if</strong> (p == <strong class="jxr_keyword">null</strong>) {
-<a class="jxr_linenumber" name="L256" href="#L256">256</a>             <strong class="jxr_keyword">if</strong> (LOG.isErrorEnabled()) {
-<a class="jxr_linenumber" name="L257" href="#L257">257</a>                 LOG.error(<span class="jxr_string">"Failed lo lookup kstat value on {}:{}:{} for key {}"</span>,
+<a class="jxr_linenumber" name="L256" href="#L256">256</a>             <strong class="jxr_keyword">if</strong> (LOG.isDebugEnabled()) {
+<a class="jxr_linenumber" name="L257" href="#L257">257</a>                 LOG.debug(<span class="jxr_string">"Failed lo lookup kstat value on {}:{}:{} for key {}"</span>,
 <a class="jxr_linenumber" name="L258" href="#L258">258</a>                         Native.toString(ksp.ks_module, StandardCharsets.US_ASCII), ksp.ks_instance,
 <a class="jxr_linenumber" name="L259" href="#L259">259</a>                         Native.toString(ksp.ks_name, StandardCharsets.US_ASCII), name);
 <a class="jxr_linenumber" name="L260" href="#L260">260</a>             }

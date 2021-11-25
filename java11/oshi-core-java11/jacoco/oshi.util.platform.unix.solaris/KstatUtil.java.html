@@ -253,8 +253,8 @@ public final class KstatUtil {
         }
 <span class="nc" id="L254">        Pointer p = KS.kstat_data_lookup(ksp, name);</span>
 <span class="nc bnc" id="L255" title="All 2 branches missed.">        if (p == null) {</span>
-<span class="nc bnc" id="L256" title="All 2 branches missed.">            if (LOG.isErrorEnabled()) {</span>
-<span class="nc" id="L257">                LOG.error(&quot;Failed lo lookup kstat value on {}:{}:{} for key {}&quot;,</span>
+<span class="nc bnc" id="L256" title="All 2 branches missed.">            if (LOG.isDebugEnabled()) {</span>
+<span class="nc" id="L257">                LOG.debug(&quot;Failed lo lookup kstat value on {}:{}:{} for key {}&quot;,</span>
 <span class="nc" id="L258">                        Native.toString(ksp.ks_module, StandardCharsets.US_ASCII), ksp.ks_instance,</span>
 <span class="nc" id="L259">                        Native.toString(ksp.ks_name, StandardCharsets.US_ASCII), name);</span>
             }

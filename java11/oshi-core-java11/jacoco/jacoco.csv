@@ -1,6 +1,6 @@
 GROUP,PACKAGE,CLASS,INSTRUCTION_MISSED,INSTRUCTION_COVERED,BRANCH_MISSED,BRANCH_COVERED,LINE_MISSED,LINE_COVERED,COMPLEXITY_MISSED,COMPLEXITY_COVERED,METHOD_MISSED,METHOD_COVERED
 oshi-core,oshi.driver.windows,EnumWindows,122,0,14,0,25,0,11,0,4,0
-oshi-core,oshi.driver.windows,DeviceTree,249,0,18,0,48,0,13,0,4,0
+oshi-core,oshi.driver.windows,DeviceTree,250,0,18,0,48,0,13,0,4,0
 oshi-core,oshi.driver.windows,LogicalProcessorInformation,382,0,42,0,64,0,30,0,8,0
 oshi-core,oshi.util.platform.windows,PerfCounterQuery,288,0,27,0,59,0,21,0,6,0
 oshi-core,oshi.util.platform.windows,PerfDataUtil.PerfCounter,54,0,2,0,14,0,6,0,5,0
@@ -20,7 +20,7 @@ oshi-core,oshi.software.os,OSThread,12,0,0,0,6,0,6,0,6,0
 oshi-core,oshi.software.os,OSSession,16,73,6,2,1,16,4,7,0,7
 oshi-core,oshi.software.os,InternetProtocolStats.IPConnection,5,102,0,0,3,26,1,10,1,10
 oshi-core,oshi.software.os,InternetProtocolStats.TcpStats,0,85,0,0,0,23,0,12,0,12
-oshi-core,oshi.software.os,OSDesktopWindow,29,33,0,0,6,12,5,4,5,4
+oshi-core,oshi.software.os,OSDesktopWindow,23,39,0,0,4,14,3,6,3,6
 oshi-core,oshi.software.os,InternetProtocolStats.TcpState,0,81,0,0,0,3,0,1,0,1
 oshi-core,oshi.software.os,OSProcess.State,0,57,0,0,0,10,0,1,0,1
 oshi-core,oshi.software.os,OperatingSystem.OSVersionInfo,9,66,6,4,1,16,5,5,0,5
@@ -46,7 +46,7 @@ oshi-core,oshi.hardware.common,AbstractCentralProcessor,688,0,57,0,143,0,60,0,17
 oshi-core,oshi.hardware.common,AbstractSensors,71,0,0,0,12,0,5,0,5,0
 oshi-core,oshi.hardware.common,AbstractHardwareAbstractionLayer,47,0,0,0,10,0,6,0,6,0
 oshi-core,oshi.software.os.windows,WindowsOperatingSystem,858,0,105,0,212,0,91,0,38,0
-oshi-core,oshi.software.os.windows,WindowsFileSystem,595,0,48,0,111,0,35,0,9,0
+oshi-core,oshi.software.os.windows,WindowsFileSystem,596,0,48,0,111,0,35,0,9,0
 oshi-core,oshi.software.os.windows,WindowsOSSystemInfo,65,0,4,0,21,0,7,0,5,0
 oshi-core,oshi.software.os.windows,WindowsOSThread,163,0,16,0,48,0,23,0,13,0
 oshi-core,oshi.software.os.windows,WindowsNetworkParams,197,0,22,0,47,0,20,0,9,0
@@ -178,13 +178,13 @@ oshi-core,oshi.util,LsofUtil,4,93,4,13,2,19,4,8,0,3
 oshi-core,oshi.util,Memoizer.new Supplier() {...},2,71,1,9,0,14,1,6,0,2
 oshi-core,oshi.util,GlobalConfig,0,70,0,8,0,18,0,13,0,9
 oshi-core,oshi.util,Constants,6,5,0,0,2,1,1,1,1,1
-oshi-core,oshi.util,ParseUtil,32,1982,28,242,7,415,27,166,0,55
+oshi-core,oshi.util,ParseUtil,32,1989,28,244,7,416,27,167,0,55
 oshi-core,oshi.util,Memoizer,0,29,0,0,0,6,0,5,0,5
 oshi-core,oshi.util,FileUtil,136,250,24,34,36,63,22,20,3,10
 oshi-core,oshi.util,EdidUtil,32,515,7,16,2,63,6,25,0,17
 oshi-core,oshi.util,FormatUtil,0,334,0,36,0,56,0,30,0,12
 oshi-core,oshi.util,GlobalConfig.PropertyException,6,8,0,0,2,2,1,1,1,1
-oshi-core,oshi.util,ExecutingCommand,32,103,3,7,9,28,3,9,0,7
+oshi-core,oshi.util,ExecutingCommand,41,105,3,9,15,29,3,11,0,8
 oshi-core,oshi.driver.windows.registry,ProcessWtsData,205,0,14,0,34,0,11,0,4,0
 oshi-core,oshi.driver.windows.registry,HkeyPerformanceDataUtil,456,0,32,0,90,0,21,0,5,0
 oshi-core,oshi.driver.windows.registry,ProcessWtsData.WtsInfo,45,0,0,0,16,0,8,0,8,0
@@ -289,7 +289,7 @@ oshi-core,oshi.hardware.platform.windows,WindowsSoundCard,76,0,6,0,18,0,5,0,2,0
 oshi-core,oshi.hardware.platform.windows,WindowsHWDiskStore,810,0,66,0,148,0,49,0,16,0
 oshi-core,oshi.hardware.platform.windows,WindowsLogicalVolumeGroup,337,0,34,0,77,0,20,0,3,0
 oshi-core,oshi.hardware.platform.windows,WindowsSensors,399,0,64,0,113,0,43,0,11,0
-oshi-core,oshi.hardware.platform.windows,WindowsPowerSource,699,0,84,0,155,0,47,0,5,0
+oshi-core,oshi.hardware.platform.windows,WindowsPowerSource,700,0,84,0,155,0,47,0,5,0
 oshi-core,oshi.driver.linux,Lshw,109,0,16,0,24,0,12,0,4,0
 oshi-core,oshi.driver.linux,Devicetree,13,0,2,0,4,0,2,0,1,0
 oshi-core,oshi.driver.linux,Lshal,46,0,8,0,12,0,6,0,2,0
@@ -412,7 +412,7 @@ oshi-core,oshi.software.os.unix.solaris,SolarisOSFileStore,118,0,6,0,31,0,13,0,1
 oshi-core,oshi.software.os.unix.solaris,SolarisFileSystem,338,0,60,0,75,0,37,0,7,0
 oshi-core,oshi.software.os.unix.solaris,SolarisOperatingSystem.PsKeywords,93,0,0,0,2,0,1,0,1,0
 oshi-core,oshi.software.os.unix.solaris,SolarisOperatingSystem,488,0,60,0,99,0,55,0,25,0
-oshi-core,oshi.driver.mac.disk,Fsstat,58,0,2,0,8,0,2,0,1,0
+oshi-core,oshi.driver.mac.disk,Fsstat,79,0,2,0,12,0,4,0,3,0
 oshi-core,oshi.jna.platform.mac,CoreGraphics,6,0,0,0,1,0,1,0,1,0
 oshi-core,oshi.jna.platform.mac,SystemB.InSockInfo,15,0,0,0,4,0,1,0,1,0
 oshi-core,oshi.jna.platform.mac,SystemB.SocketFdInfo,3,0,0,0,1,0,1,0,1,0
