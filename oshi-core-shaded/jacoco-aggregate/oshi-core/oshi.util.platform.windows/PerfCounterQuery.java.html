@@ -53,10 +53,10 @@ public final class PerfCounterQuery {
 <span class="nc" id="L53">    private static final boolean IS_VISTA_OR_GREATER = VersionHelpers.IsWindowsVistaOrGreater();</span>
 
     // Use a thread safe set to cache failed pdh queries
-<span class="nc" id="L56">    private static final Set&lt;String&gt; failedQueryCache = ConcurrentHashMap.newKeySet();</span>
+<span class="nc" id="L56">    private static final Set&lt;String&gt; FAILED_QUERY_CACHE = ConcurrentHashMap.newKeySet();</span>
 
     // For XP, use a map to cache localization strings
-<span class="nc bnc" id="L59" title="All 2 branches missed.">    private static final ConcurrentHashMap&lt;String, String&gt; localizeCache = IS_VISTA_OR_GREATER ? null</span>
+<span class="nc bnc" id="L59" title="All 2 branches missed.">    private static final ConcurrentHashMap&lt;String, String&gt; LOCALIZE_CACHE = IS_VISTA_OR_GREATER ? null</span>
 <span class="nc" id="L60">            : new ConcurrentHashMap&lt;&gt;();</span>
 
     /*
@@ -91,14 +91,14 @@ public final class PerfCounterQuery {
      */
     public static &lt;T extends Enum&lt;T&gt;&gt; Map&lt;T, Long&gt; queryValues(Class&lt;T&gt; propertyEnum, String perfObject,
             String perfWmiClass) {
-<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (!failedQueryCache.contains(perfObject)) {</span>
+<span class="nc bnc" id="L94" title="All 2 branches missed.">        if (!FAILED_QUERY_CACHE.contains(perfObject)) {</span>
 <span class="nc" id="L95">            Map&lt;T, Long&gt; valueMap = queryValuesFromPDH(propertyEnum, perfObject);</span>
 <span class="nc bnc" id="L96" title="All 2 branches missed.">            if (!valueMap.isEmpty()) {</span>
 <span class="nc" id="L97">                return valueMap;</span>
             }
             // If we are here, query failed
 <span class="nc" id="L100">            LOG.warn(&quot;Disabling further attempts to query {}.&quot;, perfObject);</span>
-<span class="nc" id="L101">            failedQueryCache.add(perfObject);</span>
+<span class="nc" id="L101">            FAILED_QUERY_CACHE.add(perfObject);</span>
         }
 <span class="nc" id="L103">        return queryValuesFromWMI(propertyEnum, perfWmiClass);</span>
     }
@@ -204,7 +204,7 @@ public final class PerfCounterQuery {
      */
     public static String localizeIfNeeded(String perfObject) {
 <span class="nc bnc" id="L206" title="All 2 branches missed.">        return IS_VISTA_OR_GREATER ? perfObject</span>
-<span class="nc" id="L207">                : localizeCache.computeIfAbsent(perfObject, PerfCounterQuery::localizeUsingPerfIndex);</span>
+<span class="nc" id="L207">                : LOCALIZE_CACHE.computeIfAbsent(perfObject, PerfCounterQuery::localizeUsingPerfIndex);</span>
     }
 
     private static String localizeUsingPerfIndex(String perfObject) {

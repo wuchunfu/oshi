@@ -86,9 +86,9 @@ final class FreeBsdSoundCard extends AbstractSoundCard {
             }
 <span class="nc" id="L87">        }</span>
 <span class="nc" id="L88">        List&lt;SoundCard&gt; soundCards = new ArrayList&lt;&gt;();</span>
-<span class="nc bnc" id="L89" title="All 2 branches missed.">        for (String _key : sounds) {</span>
-<span class="nc" id="L90">            soundCards.add(new FreeBsdSoundCard(productMap.get(_key), vendorMap.get(_key) + &quot; &quot; + productMap.get(_key),</span>
-<span class="nc" id="L91">                    productMap.get(_key)));</span>
+<span class="nc bnc" id="L89" title="All 2 branches missed.">        for (String s : sounds) {</span>
+<span class="nc" id="L90">            soundCards.add(new FreeBsdSoundCard(productMap.get(s), vendorMap.get(s) + &quot; &quot; + productMap.get(s),</span>
+<span class="nc" id="L91">                    productMap.get(s)));</span>
 <span class="nc" id="L92">        }</span>
 <span class="nc" id="L93">        return soundCards;</span>
     }
