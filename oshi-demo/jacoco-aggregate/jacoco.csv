@@ -6,7 +6,7 @@ oshi-demo/oshi-core,oshi.util.platform.windows,PerfCounterQuery,288,0,27,0,59,0,
 oshi-demo/oshi-core,oshi.util.platform.windows,PerfDataUtil.PerfCounter,54,0,2,0,14,0,6,0,5,0
 oshi-demo/oshi-core,oshi.util.platform.windows,PerfCounterQueryHandler,178,0,24,0,49,0,20,0,8,0
 oshi-demo/oshi-core,oshi.util.platform.windows,PerfDataUtil,207,0,32,0,43,0,24,0,8,0
-oshi-demo/oshi-core,oshi.util.platform.windows,WmiQueryHandler,291,0,35,0,79,0,34,0,15,0
+oshi-demo/oshi-core,oshi.util.platform.windows,WmiQueryHandler,294,0,37,0,78,0,35,0,15,0
 oshi-demo/oshi-core,oshi.util.platform.windows,WmiUtil,556,0,38,0,67,0,32,0,13,0
 oshi-demo/oshi-core,oshi.util.platform.windows,PerfCounterWildcardQuery,355,0,35,0,68,0,24,0,5,0
 oshi-demo/oshi-core,oshi.driver.unix.solaris,PsInfo,603,0,60,0,103,0,37,0,7,0
@@ -118,7 +118,7 @@ oshi-demo/oshi-core,oshi.driver.linux.proc,UserGroupInfo,111,0,8,0,26,0,9,0,5,0
 oshi-demo/oshi-core,oshi.driver.linux.proc,ProcessStat.PidStatM,45,0,0,0,8,0,1,0,1,0
 oshi-demo/oshi-core,oshi.driver.linux.proc,DiskStats.IoStat,123,0,0,0,21,0,1,0,1,0
 oshi-demo/oshi-core,oshi.driver.linux.proc,CpuInfo,139,0,33,0,46,0,28,0,3,0
-oshi-demo/oshi-core,oshi.driver.linux.proc,ProcessStat,334,0,34,0,61,0,31,0,12,0
+oshi-demo/oshi-core,oshi.driver.linux.proc,ProcessStat,331,0,32,0,61,0,30,0,12,0
 oshi-demo/oshi-core,oshi.driver.linux.proc,ProcessStat.PidStat,315,0,0,0,53,0,1,0,1,0
 oshi-demo/oshi-core,oshi.hardware.platform.mac,MacGlobalMemory,240,0,21,0,54,0,23,0,11,0
 oshi-demo/oshi-core,oshi.hardware.platform.mac,MacVirtualMemory,141,0,4,0,28,0,12,0,10,0
@@ -264,7 +264,7 @@ oshi-demo/oshi-core,oshi.software.os.unix.aix,AixInternetProtocolStats,138,0,8,0
 oshi-demo/oshi-core,oshi.software.os.unix.aix,AixOSFileStore,118,0,6,0,31,0,13,0,10,0
 oshi-demo/oshi-core,oshi.software.os.unix.aix,AixNetworkParams,60,0,8,0,14,0,10,0,6,0
 oshi-demo/oshi-core,oshi.software.os.unix.aix,AixOSThread,125,0,8,0,30,0,15,0,11,0
-oshi-demo/oshi-core,oshi.software.os.unix.aix,AixOperatingSystem,541,0,54,0,86,0,49,0,22,0
+oshi-demo/oshi-core,oshi.software.os.unix.aix,AixOperatingSystem,541,0,54,0,87,0,49,0,22,0
 oshi-demo/oshi-core,oshi.software.os.unix.aix,AixOperatingSystem.PsKeywords,99,0,0,0,2,0,1,0,1,0
 oshi-demo/oshi-core,oshi.software.os.unix.aix,AixOSProcess,621,0,45,0,132,0,59,0,34,0
 oshi-demo/oshi-core,oshi.software.os.unix.aix,AixOSProcess.PsThreadColumns,81,0,0,0,2,0,1,0,1,0

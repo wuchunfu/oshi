@@ -36,7 +36,7 @@ import oshi.annotation.concurrent.ThreadSafe;
 @ThreadSafe
 public final class Memoizer {
 
-<span class="fc" id="L39">    private static final Supplier&lt;Long&gt; defaultExpirationNanos = memoize(Memoizer::queryExpirationConfig,</span>
+<span class="fc" id="L39">    private static final Supplier&lt;Long&gt; DEFAULT_EXPIRATION_NANOS = memoize(Memoizer::queryExpirationConfig,</span>
 <span class="fc" id="L40">            TimeUnit.MINUTES.toNanos(1));</span>
 
     private Memoizer() {
@@ -54,7 +54,7 @@ public final class Memoizer {
      * @return The number of nanoseconds to keep memoized values before refreshing
      */
     public static long defaultExpiration() {
-<span class="fc" id="L57">        return defaultExpirationNanos.get();</span>
+<span class="fc" id="L57">        return DEFAULT_EXPIRATION_NANOS.get();</span>
     }
 
     /**
