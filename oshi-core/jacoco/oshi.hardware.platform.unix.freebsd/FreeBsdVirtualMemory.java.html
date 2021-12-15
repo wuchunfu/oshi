@@ -40,7 +40,7 @@ import oshi.util.platform.unix.freebsd.BsdSysctlUtil;
 @ThreadSafe
 final class FreeBsdVirtualMemory extends AbstractVirtualMemory {
 
-    FreeBsdGlobalMemory global;
+    private final FreeBsdGlobalMemory global;
 
 <span class="nc" id="L45">    private final Supplier&lt;Long&gt; used = memoize(FreeBsdVirtualMemory::querySwapUsed, defaultExpiration());</span>
 

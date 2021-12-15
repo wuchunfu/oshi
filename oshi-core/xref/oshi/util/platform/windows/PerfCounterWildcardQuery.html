@@ -63,7 +63,7 @@
 <a class="jxr_linenumber" name="L55" href="#L55">55</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Logger LOG = LoggerFactory.getLogger(PerfCounterWildcardQuery.<strong class="jxr_keyword">class</strong>);
 <a class="jxr_linenumber" name="L56" href="#L56">56</a>  
 <a class="jxr_linenumber" name="L57" href="#L57">57</a>      <em class="jxr_comment">// Use a thread safe set to cache failed pdh queries</em>
-<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Set&lt;String&gt; failedQueryCache = ConcurrentHashMap.newKeySet();
+<a class="jxr_linenumber" name="L58" href="#L58">58</a>      <strong class="jxr_keyword">private</strong> <strong class="jxr_keyword">static</strong> <strong class="jxr_keyword">final</strong> Set&lt;String&gt; FAILED_QUERY_CACHE = ConcurrentHashMap.newKeySet();
 <a class="jxr_linenumber" name="L59" href="#L59">59</a>  
 <a class="jxr_linenumber" name="L60" href="#L60">60</a>      <strong class="jxr_keyword">private</strong> <a name="PerfCounterWildcardQuery" href="../../../../oshi/util/platform/windows/PerfCounterWildcardQuery.html#PerfCounterWildcardQuery">PerfCounterWildcardQuery</a>() {
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>      }
@@ -90,7 +90,7 @@
 <a class="jxr_linenumber" name="L82" href="#L82">82</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L83" href="#L83">83</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> &lt;T <strong class="jxr_keyword">extends</strong> Enum&lt;T&gt;&gt; Pair&lt;List&lt;String&gt;, Map&lt;T, List&lt;Long&gt;&gt;&gt; queryInstancesAndValues(
 <a class="jxr_linenumber" name="L84" href="#L84">84</a>              Class&lt;T&gt; propertyEnum, String perfObject, String perfWmiClass) {
-<a class="jxr_linenumber" name="L85" href="#L85">85</a>          <strong class="jxr_keyword">if</strong> (!failedQueryCache.contains(perfObject)) {
+<a class="jxr_linenumber" name="L85" href="#L85">85</a>          <strong class="jxr_keyword">if</strong> (!FAILED_QUERY_CACHE.contains(perfObject)) {
 <a class="jxr_linenumber" name="L86" href="#L86">86</a>              Pair&lt;List&lt;String&gt;, Map&lt;T, List&lt;Long&gt;&gt;&gt; instancesAndValuesMap = queryInstancesAndValuesFromPDH(propertyEnum,
 <a class="jxr_linenumber" name="L87" href="#L87">87</a>                      perfObject);
 <a class="jxr_linenumber" name="L88" href="#L88">88</a>              <strong class="jxr_keyword">if</strong> (!instancesAndValuesMap.getA().isEmpty()) {
@@ -98,7 +98,7 @@
 <a class="jxr_linenumber" name="L90" href="#L90">90</a>              }
 <a class="jxr_linenumber" name="L91" href="#L91">91</a>              <em class="jxr_comment">// If we are here, query failed</em>
 <a class="jxr_linenumber" name="L92" href="#L92">92</a>              LOG.warn(<span class="jxr_string">"Disabling further attempts to query {}."</span>, perfObject);
-<a class="jxr_linenumber" name="L93" href="#L93">93</a>              failedQueryCache.add(perfObject);
+<a class="jxr_linenumber" name="L93" href="#L93">93</a>              FAILED_QUERY_CACHE.add(perfObject);
 <a class="jxr_linenumber" name="L94" href="#L94">94</a>          }
 <a class="jxr_linenumber" name="L95" href="#L95">95</a>          <strong class="jxr_keyword">return</strong> queryInstancesAndValuesFromWMI(propertyEnum, perfWmiClass);
 <a class="jxr_linenumber" name="L96" href="#L96">96</a>      }

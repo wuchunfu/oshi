@@ -48,11 +48,10 @@ public final class UpTime {
 <span class="nc bnc" id="L48" title="All 2 branches missed.">            if (spaceIndex &lt; 0) {</span>
                 // No space, error
 <span class="nc" id="L50">                return 0d;</span>
-            } else {
-<span class="nc" id="L52">                return Double.parseDouble(uptime.substring(0, spaceIndex));</span>
             }
-<span class="nc" id="L54">        } catch (NumberFormatException nfe) {</span>
-<span class="nc" id="L55">            return 0d;</span>
+<span class="nc" id="L52">            return Double.parseDouble(uptime.substring(0, spaceIndex));</span>
+<span class="nc" id="L53">        } catch (NumberFormatException nfe) {</span>
+<span class="nc" id="L54">            return 0d;</span>
         }
     }
 }

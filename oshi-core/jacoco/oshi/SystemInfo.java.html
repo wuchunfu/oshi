@@ -59,7 +59,7 @@ public class SystemInfo {
 
     // The platform isn't going to change, and making this static enables easy
     // access from outside this class
-<span class="fc" id="L62">    private static final PlatformEnum currentPlatform = PlatformEnum.getValue(Platform.getOSType());</span>
+<span class="fc" id="L62">    private static final PlatformEnum CURRENT_PLATFORM = PlatformEnum.getValue(Platform.getOSType());</span>
 
     private static final String NOT_SUPPORTED = &quot;Operating system not supported: &quot;;
 
@@ -87,7 +87,7 @@ public class SystemInfo {
      * @return Returns the current platform
      */
     public static PlatformEnum getCurrentPlatform() {
-<span class="fc" id="L90">        return currentPlatform;</span>
+<span class="fc" id="L90">        return CURRENT_PLATFORM;</span>
     }
 
     /**
@@ -113,7 +113,7 @@ public class SystemInfo {
     }
 
     private static OperatingSystem createOperatingSystem() {
-<span class="pc bpc" id="L116" title="7 of 8 branches missed.">        switch (currentPlatform) {</span>
+<span class="pc bpc" id="L116" title="7 of 8 branches missed.">        switch (CURRENT_PLATFORM) {</span>
         case WINDOWS:
 <span class="nc" id="L118">            return new WindowsOperatingSystem();</span>
         case LINUX:
@@ -129,7 +129,7 @@ public class SystemInfo {
         case OPENBSD:
 <span class="nc" id="L130">            return new OpenBsdOperatingSystem();</span>
         default:
-<span class="nc" id="L132">            throw new UnsupportedOperationException(NOT_SUPPORTED + currentPlatform.getName());</span>
+<span class="nc" id="L132">            throw new UnsupportedOperationException(NOT_SUPPORTED + CURRENT_PLATFORM.getName());</span>
         }
     }
 
@@ -144,7 +144,7 @@ public class SystemInfo {
     }
 
     private static HardwareAbstractionLayer createHardware() {
-<span class="pc bpc" id="L147" title="7 of 8 branches missed.">        switch (currentPlatform) {</span>
+<span class="pc bpc" id="L147" title="7 of 8 branches missed.">        switch (CURRENT_PLATFORM) {</span>
         case WINDOWS:
 <span class="nc" id="L149">            return new WindowsHardwareAbstractionLayer();</span>
         case LINUX:
@@ -160,7 +160,7 @@ public class SystemInfo {
         case OPENBSD:
 <span class="nc" id="L161">            return new OpenBsdHardwareAbstractionLayer();</span>
         default:
-<span class="nc" id="L163">            throw new UnsupportedOperationException(NOT_SUPPORTED + currentPlatform.getName());</span>
+<span class="nc" id="L163">            throw new UnsupportedOperationException(NOT_SUPPORTED + CURRENT_PLATFORM.getName());</span>
         }
     }
 }
