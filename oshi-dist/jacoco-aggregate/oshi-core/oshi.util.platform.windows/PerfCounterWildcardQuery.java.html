@@ -55,7 +55,7 @@ public final class PerfCounterWildcardQuery {
 <span class="nc" id="L55">    private static final Logger LOG = LoggerFactory.getLogger(PerfCounterWildcardQuery.class);</span>
 
     // Use a thread safe set to cache failed pdh queries
-<span class="nc" id="L58">    private static final Set&lt;String&gt; failedQueryCache = ConcurrentHashMap.newKeySet();</span>
+<span class="nc" id="L58">    private static final Set&lt;String&gt; FAILED_QUERY_CACHE = ConcurrentHashMap.newKeySet();</span>
 
     private PerfCounterWildcardQuery() {
     }
@@ -82,7 +82,7 @@ public final class PerfCounterWildcardQuery {
      */
     public static &lt;T extends Enum&lt;T&gt;&gt; Pair&lt;List&lt;String&gt;, Map&lt;T, List&lt;Long&gt;&gt;&gt; queryInstancesAndValues(
             Class&lt;T&gt; propertyEnum, String perfObject, String perfWmiClass) {
-<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (!failedQueryCache.contains(perfObject)) {</span>
+<span class="nc bnc" id="L85" title="All 2 branches missed.">        if (!FAILED_QUERY_CACHE.contains(perfObject)) {</span>
 <span class="nc" id="L86">            Pair&lt;List&lt;String&gt;, Map&lt;T, List&lt;Long&gt;&gt;&gt; instancesAndValuesMap = queryInstancesAndValuesFromPDH(propertyEnum,</span>
                     perfObject);
 <span class="nc bnc" id="L88" title="All 2 branches missed.">            if (!instancesAndValuesMap.getA().isEmpty()) {</span>
@@ -90,7 +90,7 @@ public final class PerfCounterWildcardQuery {
             }
             // If we are here, query failed
 <span class="nc" id="L92">            LOG.warn(&quot;Disabling further attempts to query {}.&quot;, perfObject);</span>
-<span class="nc" id="L93">            failedQueryCache.add(perfObject);</span>
+<span class="nc" id="L93">            FAILED_QUERY_CACHE.add(perfObject);</span>
         }
 <span class="nc" id="L95">        return queryInstancesAndValuesFromWMI(propertyEnum, perfWmiClass);</span>
     }

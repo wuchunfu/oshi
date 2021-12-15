@@ -383,7 +383,7 @@ public final class ProcessStat {
     public static final int PROC_PID_STAT_LENGTH;
     static {
 <span class="nc" id="L385">        String stat = FileUtil.getStringFromFile(ProcPath.SELF_STAT);</span>
-<span class="nc bnc" id="L386" title="All 4 branches missed.">        if (!stat.isEmpty() &amp;&amp; stat.contains(&quot;)&quot;)) {</span>
+<span class="nc bnc" id="L386" title="All 2 branches missed.">        if (stat.contains(&quot;)&quot;)) {</span>
             // add 3 to account for pid, process name in prarenthesis, and state
 <span class="nc" id="L388">            PROC_PID_STAT_LENGTH = ParseUtil.countStringToLongArray(stat, ' ') + 3;</span>
         } else {

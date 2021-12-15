@@ -48,7 +48,7 @@ public final class ProcessorInformation {
     private static final String WIN32_PERF_RAW_DATA_COUNTERS_PROCESSOR_INFORMATION_WHERE_NOT_NAME_LIKE_TOTAL = &quot;Win32_PerfRawData_Counters_ProcessorInformation WHERE NOT Name LIKE \&quot;%_Total\&quot;&quot;;
 
     // For Vista- ... Older systems just have processor #
-    private static final String WIN32_PERF_RAW_DATA_PERF_OS_PROCESSOR_WHERE_NOT_NAME_TOTAL = &quot;Win32_PerfRawData_PerfOS_Processor WHERE NOT Name=\&quot;_Total\&quot;&quot;;
+    private static final String WIN32_PERF_RAW_DATA_PERF_OS_PROCESSOR_WHERE_NAME_NOT_TOTAL = &quot;Win32_PerfRawData_PerfOS_Processor WHERE Name!=\&quot;_Total\&quot;&quot;;
     private static final String WIN32_PERF_RAW_DATA_PERF_OS_PROCESSOR_WHERE_NAME_TOTAL = &quot;Win32_PerfRawData_PerfOS_Processor WHERE Name=\&quot;_Total\&quot;&quot;;
 
 <span class="nc" id="L54">    private static final boolean IS_WIN7_OR_GREATER = VersionHelpers.IsWindows7OrGreater();</span>
@@ -136,7 +136,7 @@ public final class ProcessorInformation {
 <span class="nc bnc" id="L136" title="All 2 branches missed.">        return IS_WIN7_OR_GREATER ? PerfCounterWildcardQuery.queryInstancesAndValues(ProcessorTickCountProperty.class,</span>
                 PROCESSOR_INFORMATION, WIN32_PERF_RAW_DATA_COUNTERS_PROCESSOR_INFORMATION_WHERE_NOT_NAME_LIKE_TOTAL)
 <span class="nc" id="L138">                : PerfCounterWildcardQuery.queryInstancesAndValues(ProcessorTickCountProperty.class, PROCESSOR,</span>
-                        WIN32_PERF_RAW_DATA_PERF_OS_PROCESSOR_WHERE_NOT_NAME_TOTAL);
+                        WIN32_PERF_RAW_DATA_PERF_OS_PROCESSOR_WHERE_NAME_NOT_TOTAL);
     }
 
     /**
