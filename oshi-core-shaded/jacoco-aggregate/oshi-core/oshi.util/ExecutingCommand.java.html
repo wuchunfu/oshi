@@ -122,46 +122,47 @@ public final class ExecutingCommand {
         } finally {
             // Ensure all resources are released
 <span class="fc bfc" id="L124" title="All 2 branches covered.">            if (p != null) {</span>
-                // Solaris doesn't close descriptors on destroy so we must handle separately
-<span class="pc bpc" id="L126" title="1 of 2 branches missed.">                if (Platform.isSolaris()) {</span>
+                // Windows and Solaris don't close descriptors on destroy,
+                // so we must handle separately
+<span class="pc bpc" id="L127" title="2 of 4 branches missed.">                if (Platform.isWindows() || Platform.isSolaris()) {</span>
                     try {
-<span class="nc" id="L128">                        p.getOutputStream().close();</span>
-<span class="nc" id="L129">                    } catch (IOException e) {</span>
+<span class="nc" id="L129">                        p.getOutputStream().close();</span>
+<span class="nc" id="L130">                    } catch (IOException e) {</span>
                         // do nothing on failure
-<span class="nc" id="L131">                    }</span>
+<span class="nc" id="L132">                    }</span>
                     try {
-<span class="nc" id="L133">                        p.getInputStream().close();</span>
-<span class="nc" id="L134">                    } catch (IOException e) {</span>
+<span class="nc" id="L134">                        p.getInputStream().close();</span>
+<span class="nc" id="L135">                    } catch (IOException e) {</span>
                         // do nothing on failure
-<span class="nc" id="L136">                    }</span>
+<span class="nc" id="L137">                    }</span>
                     try {
-<span class="nc" id="L138">                        p.getErrorStream().close();</span>
-<span class="nc" id="L139">                    } catch (IOException e) {</span>
+<span class="nc" id="L139">                        p.getErrorStream().close();</span>
+<span class="nc" id="L140">                    } catch (IOException e) {</span>
                         // do nothing on failure
-<span class="nc" id="L141">                    }</span>
+<span class="nc" id="L142">                    }</span>
                 }
-<span class="fc" id="L143">                p.destroy();</span>
+<span class="fc" id="L144">                p.destroy();</span>
             }
         }
-<span class="fc" id="L146">        return Collections.emptyList();</span>
+<span class="fc" id="L147">        return Collections.emptyList();</span>
     }
 
     private static List&lt;String&gt; getProcessOutput(Process p, String[] cmd) {
-<span class="fc" id="L150">        ArrayList&lt;String&gt; sa = new ArrayList&lt;&gt;();</span>
-<span class="fc" id="L151">        try (BufferedReader reader = new BufferedReader(</span>
-<span class="fc" id="L152">                new InputStreamReader(p.getInputStream(), Charset.defaultCharset()))) {</span>
+<span class="fc" id="L151">        ArrayList&lt;String&gt; sa = new ArrayList&lt;&gt;();</span>
+<span class="fc" id="L152">        try (BufferedReader reader = new BufferedReader(</span>
+<span class="fc" id="L153">                new InputStreamReader(p.getInputStream(), Charset.defaultCharset()))) {</span>
             String line;
-<span class="fc bfc" id="L154" title="All 2 branches covered.">            while ((line = reader.readLine()) != null) {</span>
-<span class="fc" id="L155">                sa.add(line);</span>
+<span class="fc bfc" id="L155" title="All 2 branches covered.">            while ((line = reader.readLine()) != null) {</span>
+<span class="fc" id="L156">                sa.add(line);</span>
             }
-<span class="fc" id="L157">            p.waitFor();</span>
-<span class="nc" id="L158">        } catch (IOException e) {</span>
-<span class="nc" id="L159">            LOG.trace(&quot;Problem reading output from {}: {}&quot;, Arrays.toString(cmd), e.getMessage());</span>
-<span class="nc" id="L160">        } catch (InterruptedException ie) {</span>
-<span class="nc" id="L161">            LOG.trace(&quot;Interrupted while reading output from {}: {}&quot;, Arrays.toString(cmd), ie.getMessage());</span>
-<span class="nc" id="L162">            Thread.currentThread().interrupt();</span>
-<span class="pc" id="L163">        }</span>
-<span class="fc" id="L164">        return sa;</span>
+<span class="fc" id="L158">            p.waitFor();</span>
+<span class="nc" id="L159">        } catch (IOException e) {</span>
+<span class="nc" id="L160">            LOG.trace(&quot;Problem reading output from {}: {}&quot;, Arrays.toString(cmd), e.getMessage());</span>
+<span class="nc" id="L161">        } catch (InterruptedException ie) {</span>
+<span class="nc" id="L162">            LOG.trace(&quot;Interrupted while reading output from {}: {}&quot;, Arrays.toString(cmd), ie.getMessage());</span>
+<span class="nc" id="L163">            Thread.currentThread().interrupt();</span>
+<span class="pc" id="L164">        }</span>
+<span class="fc" id="L165">        return sa;</span>
     }
 
     /**
@@ -172,7 +173,7 @@ public final class ExecutingCommand {
      * @return String or empty string if command failed
      */
     public static String getFirstAnswer(String cmd2launch) {
-<span class="fc" id="L175">        return getAnswerAt(cmd2launch, 0);</span>
+<span class="fc" id="L176">        return getAnswerAt(cmd2launch, 0);</span>
     }
 
     /**
@@ -187,12 +188,12 @@ public final class ExecutingCommand {
      *         running of command fails
      */
     public static String getAnswerAt(String cmd2launch, int answerIdx) {
-<span class="fc" id="L190">        List&lt;String&gt; sa = ExecutingCommand.runNative(cmd2launch);</span>
+<span class="fc" id="L191">        List&lt;String&gt; sa = ExecutingCommand.runNative(cmd2launch);</span>
 
-<span class="pc bpc" id="L192" title="1 of 4 branches missed.">        if (answerIdx &gt;= 0 &amp;&amp; answerIdx &lt; sa.size()) {</span>
-<span class="fc" id="L193">            return sa.get(answerIdx);</span>
+<span class="pc bpc" id="L193" title="1 of 4 branches missed.">        if (answerIdx &gt;= 0 &amp;&amp; answerIdx &lt; sa.size()) {</span>
+<span class="fc" id="L194">            return sa.get(answerIdx);</span>
         }
-<span class="fc" id="L195">        return &quot;&quot;;</span>
+<span class="fc" id="L196">        return &quot;&quot;;</span>
     }
 
 }
