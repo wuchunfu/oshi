@@ -184,7 +184,7 @@ oshi-core,oshi.util,FileUtil,136,250,24,34,36,63,22,20,3,10
 oshi-core,oshi.util,EdidUtil,32,522,7,16,2,63,6,25,0,17
 oshi-core,oshi.util,FormatUtil,0,370,0,36,0,56,0,30,0,12
 oshi-core,oshi.util,GlobalConfig.PropertyException,15,17,0,0,2,2,1,1,1,1
-oshi-core,oshi.util,ExecutingCommand,41,105,3,9,15,29,3,11,0,8
+oshi-core,oshi.util,ExecutingCommand,41,107,4,10,15,29,4,11,0,8
 oshi-core,oshi.driver.windows.registry,ProcessWtsData,205,0,14,0,34,0,11,0,4,0
 oshi-core,oshi.driver.windows.registry,HkeyPerformanceDataUtil,456,0,32,0,90,0,21,0,5,0
 oshi-core,oshi.driver.windows.registry,ProcessWtsData.WtsInfo,45,0,0,0,16,0,8,0,8,0
