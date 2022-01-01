@@ -74,7 +74,10 @@
       <li class="dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown">Modules <b class="caret"></b></a>
         <ul class="dropdown-menu">
-            <li><a href="oshi-core-java11/index.html" title="oshi-core">oshi-core</a></li>
+            <li><a href="oshi-core/index.html" title="oshi-core">oshi-core</a></li>
+            <li><a href="oshi-core-shaded/index.html" title="oshi-core-shaded">oshi-core-shaded</a></li>
+            <li><a href="oshi-demo/index.html" title="oshi-demo">oshi-demo</a></li>
+            <li><a href="oshi-dist/index.html" title="oshi-dist">oshi-dist</a></li>
         </ul>
       </li>
             </ul>
@@ -116,7 +119,10 @@
     <li><a href="project-info.html" title="Project Information"><span class="icon-chevron-right"></span>Project Information</a></li>
     <li><a href="project-reports.html" title="Project Reports"><span class="icon-chevron-right"></span>Project Reports</a></li>
       <li class="nav-header">Modules</li>
-    <li><a href="oshi-core-java11/index.html" title="oshi-core"><span class="none"></span>oshi-core</a></li>
+    <li><a href="oshi-core/index.html" title="oshi-core"><span class="none"></span>oshi-core</a></li>
+    <li><a href="oshi-core-shaded/index.html" title="oshi-core-shaded"><span class="none"></span>oshi-core-shaded</a></li>
+    <li><a href="oshi-demo/index.html" title="oshi-demo"><span class="none"></span>oshi-demo</a></li>
+    <li><a href="oshi-dist/index.html" title="oshi-dist"><span class="none"></span>oshi-dist</a></li>
 </ul>
           <hr />
           <div id="poweredBy">
@@ -151,6 +157,7 @@
 <a class="externalLink" href="https://scan.coverity.com/projects/dblock-oshi"><img src="https://img.shields.io/coverity/scan/9332.svg" alt="Coverity Scan Build Status" /></a>
 <a class="externalLink" href="https://www.codacy.com/gh/oshi/oshi/dashboard?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=oshi/oshi&amp;utm_campaign=Badge_Grade"><img src="https://app.codacy.com/project/badge/Grade/4002c92342814fe1989a7841d9f427f1" alt="Codacy Grade" /></a>
 <a class="externalLink" href="https://lgtm.com/projects/g/oshi/oshi/context:java"><img src="https://img.shields.io/lgtm/grade/java/g/oshi/oshi.svg?logo=lgtm&amp;logoWidth=18" alt="Code Quality: Java" /></a>
+<a class="externalLink" href="https://github.com/oshi/oshi/security/code-scanning"><img src="https://github.com/oshi/oshi/workflows/CodeQL/badge.svg" alt="CodeQL" /></a>
 <a class="externalLink" href="https://coveralls.io/github/oshi/oshi?branch=master"><img src="https://coveralls.io/repos/github/oshi/oshi/badge.svg?branch=master" alt="Coverage Status" /></a>
 <a class="externalLink" href="https://scrutinizer-ci.com/g/oshi/oshi/?branch=master"><img src="https://scrutinizer-ci.com/g/oshi/oshi/badges/quality-score.png?b=master" alt="Scrutinizer Code Quality" /></a>
 <a class="externalLink" href="https://www.openhub.net/p/oshi?ref=github"><img src="https://www.openhub.net/p/oshi/widgets/project_thin_badge.gif" alt="Openhub Stats" /></a>
@@ -198,8 +205,8 @@ memory and CPU usage, disks and partitions, devices, sensors, etc.</p><section>
 </thead><tbody>
 
 <tr class="b">
-<td align="left"><a class="externalLink" href="https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&amp;g=com.github.oshi&amp;a=oshi-core&amp;v=5.8.2&amp;e=jar">oshi-core-5.8.2</a></td>
-<td><a class="externalLink" href="https://oss.sonatype.org/service/local/artifact/maven/redirect?r=snapshots&amp;g=com.github.oshi&amp;a=oshi-core&amp;v=5.8.3-SNAPSHOT&amp;e=jar">oshi-core-5.8.3-SNAPSHOT</a></td>
+<td align="left"><a class="externalLink" href="https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&amp;g=com.github.oshi&amp;a=oshi-core&amp;v=6.0.0&amp;e=jar">oshi-core-6.0.0</a></td>
+<td><a class="externalLink" href="https://oss.sonatype.org/service/local/artifact/maven/redirect?r=snapshots&amp;g=com.github.oshi&amp;a=oshi-core&amp;v=6.0.1-SNAPSHOT&amp;e=jar">oshi-core-6.0.1-SNAPSHOT</a></td>
 <td><a class="externalLink" href="https://github.com/java-native-access/jna">JNA</a> &#x2022; <a class="externalLink" href="http://www.slf4j.org/">SLF4J</a></td></tr>
 </tbody>
 </table>
@@ -212,8 +219,21 @@ memory and CPU usage, disks and partitions, devices, sensors, etc.</p><section>
 </thead><tbody>
 
 <tr class="b">
-<td align="left"><a class="externalLink" href="https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&amp;g=com.github.oshi&amp;a=oshi-core-java11&amp;v=5.8.2&amp;e=jar">oshi-core-java11-5.8.2</a></td>
-<td><a class="externalLink" href="https://oss.sonatype.org/service/local/artifact/maven/redirect?r=snapshots&amp;g=com.github.oshi&amp;a=oshi-core-java11&amp;v=5.8.3-SNAPSHOT&amp;e=jar">oshi-core-java11-5.8.3-SNAPSHOT</a></td></tr>
+<td align="left"><a class="externalLink" href="https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&amp;g=com.github.oshi&amp;a=oshi-core-java11&amp;v=6.0.0&amp;e=jar">oshi-core-java11-6.0.0</a></td>
+<td><a class="externalLink" href="https://oss.sonatype.org/service/local/artifact/maven/redirect?r=snapshots&amp;g=com.github.oshi&amp;a=oshi-core-java11&amp;v=6.0.1-SNAPSHOT&amp;e=jar">oshi-core-java11-6.0.1-SNAPSHOT</a></td></tr>
+</tbody>
+</table>
+<table border="0" class="table table-striped">
+<thead>
+
+<tr class="a">
+<th>Java 6 Version</th>
+<th>Current Development Version</th></tr>
+</thead><tbody>
+
+<tr class="b">
+<td align="left"><a class="externalLink" href="https://repository.sonatype.org/service/local/artifact/maven/redirect?r=central-proxy&amp;g=com.github.oshi&amp;a=oshi-core&amp;v=3.14.0&amp;e=jar">oshi-core-3.14.0</a></td>
+<td>None</td></tr>
 </tbody>
 </table></section><section>
 <h2><a name="Usage"></a>Usage</h2>
@@ -221,7 +241,7 @@ memory and CPU usage, disks and partitions, devices, sensors, etc.</p><section>
 
 <li>
 
-<p>Include OSHI and its dependencies on your classpath.  We strongly recommend you add OSHI as a dependency to your project dependency manager such as Maven or Gradle. You can <a class="externalLink" href="https://search.maven.org/artifact/com.github.oshi/oshi-core/5.8.2/jar">find the appropriate syntax to include OSHI here</a>.</p>
+<p>Include OSHI and its dependencies on your classpath.  We strongly recommend you add OSHI as a dependency to your project dependency manager such as Maven or Gradle. You can <a class="externalLink" href="https://search.maven.org/artifact/com.github.oshi/oshi-core/6.0.0/jar">find the appropriate syntax to include OSHI here</a>.</p>
 </li>
 <li>
 
@@ -233,7 +253,7 @@ memory and CPU usage, disks and partitions, devices, sensors, etc.</p><section>
 </li>
 </ol>
 
-<div class="source"><pre class="prettyprint"><code>SystemInfo si = new SystemInfo();
+<div class="source"><pre class="prettyprint"><code class="language-java">SystemInfo si = new SystemInfo();
 HardwareAbstractionLayer hal = si.getHardware();
 CentralProcessor cpu = hal.getProcessor();
 </code></pre></div>
@@ -272,18 +292,18 @@ Consider one or more of the following steps to resolve the conflict:</p>
 <p>To report a security vulnerability, please use the <a class="externalLink" href="https://tidelift.com/security">Tidelift security contact</a>.
 Tidelift will coordinate the fix and disclosure.</p></section><section>
 <h2><a name="Output"></a>Output</h2>
-<p>OSHI provides output directly via Java methods for each of its interfaces.<br />
+<p>OSHI provides output directly via Java methods for each of its interfaces.
 By periodically polling dynamic information (e.g., every second), users can calculate and track changes.</p>
 <p>You can see more examples and run the <a class="externalLink" href="https://github.com/oshi/oshi/blob/master/oshi-core/src/test/java/oshi/SystemInfoTest.java">SystemInfoTest</a>
 and see the full output for your system by cloning the project and building it with <a class="externalLink" href="https://maven.apache.org/index.html">Maven</a>:</p>
 
-<div class="source"><pre class="prettyprint"><code>git clone https://github.com/oshi/oshi.git &amp;&amp; cd oshi
+<div class="source"><pre class="prettyprint"><code class="language-sh">git clone https://github.com/oshi/oshi.git &amp;&amp; cd oshi
 
 ./mvnw test-compile -pl oshi-core exec:java \
   -Dexec.mainClass=&quot;oshi.SystemInfoTest&quot; \
   -Dexec.classpathScope=&quot;test&quot;
 </code></pre></div>
-<p>In addition, the <code>oshi-demo</code> project includes an <a class="externalLink" href="https://github.com/oshi/oshi/blob/master/oshi-demo/src/main/java/oshi/demo/OshiGui.java">OshiGui</a> class implementing a basic Swing GUI offering suggestions for potential visualizations using OSHI in a UI, monitoring, or alerting application, as shown below:</p>
+<p>In addition, the <code>oshi-demo</code> project includes an <a class="externalLink" href="https://github.com/oshi/oshi/blob/master/oshi-demo/src/main/java/oshi/demo/OshiGui.java">OshiGui</a> class implementing a basic Swing GUI offering suggestions for potential visualizations using OSHI in a UI, monitoring, or alerting application, as shown below.  For a more advanced GUI based on this approach, see the <a class="externalLink" href="https://github.com/rememberber/MooInfo">MooInfo project</a>.</p>
 <p>General information about the operating system and computer system hardware:
 <img src="https://github.com/dbwiddis/oshi/blob/master/src/site/markdown/OSHW.PNG" alt="Operating System and Hardware" /></p>
 <p>By measuring ticks (user, nice, system, idle, iowait, and irq) between time intervals, percent usage can be calculated.
@@ -295,7 +315,7 @@ Per-processor information is also provided.
 <img src="https://github.com/dbwiddis/oshi/blob/master/src/site/markdown/Memory.PNG" alt="Memory Statistics" /></p>
 <p>Statistics for the system battery are provided:</p>
 
-<div class="source"><pre class="prettyprint"><code>Power Sources: 
+<div class="source"><pre class="prettyprint"><code>Power Sources:
  Name: InternalBattery-0, Device Name: bq20z451,
  RemainingCapacityPercent: 100.0%, Time Remaining: 5:42, Time Remaining Instant: 5:42,
  Power Usage Rate: -16045.216mW, Voltage: 12.694V, Amperage: -1264.0mA,
@@ -310,14 +330,14 @@ Per-processor information is also provided.
  Display 0:
   Manuf. ID=SAM, Product ID=2ad, Analog, Serial=HA19, ManufDate=3/2008, EDID v1.3
   41 x 27 cm (16.1 x 10.6 in)
-  Preferred Timing: Clock 106MHz, Active Pixels 3840x2880 
+  Preferred Timing: Clock 106MHz, Active Pixels 3840x2880
   Range Limits: Field Rate 56-75 Hz vertical, 30-81 Hz horizontal, Max clock: 140 MHz
   Monitor Name: SyncMaster
   Serial Number: H9FQ345476
  Display 1:
   Manuf. ID=SAM, Product ID=226, Analog, Serial=HA19, ManufDate=4/2007, EDID v1.3
   41 x 26 cm (16.1 x 10.2 in)
-  Preferred Timing: Clock 106MHz, Active Pixels 3840x2880 
+  Preferred Timing: Clock 106MHz, Active Pixels 3840x2880
   Range Limits: Field Rate 56-75 Hz vertical, 30-81 Hz horizontal, Max clock: 140 MHz
   Monitor Name: SyncMaster
   Serial Number: HMCP431880
