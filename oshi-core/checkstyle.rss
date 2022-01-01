@@ -25,7 +25,7 @@ under the License.
     <language>en-us</language>
     <copyright>&#169;2010 - 2021 oshi</copyright>
     <item>
-      <title>File: 435,
+      <title>File: 431,
              Errors: 0,
              Warnings: 0,
              Infos: 0
@@ -299,20 +299,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.software.os.windows.WindowsFileSystem.java">oshi/software/os/windows/WindowsFileSystem.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.jna.platform.unix.freebsd.FreeBsdLibc.java">oshi/jna/platform/unix/freebsd/FreeBsdLibc.java</a>
                 </td>
                 <td>
                   0
@@ -1124,20 +1110,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.jna.platform.unix.aix.AixLibc.java">oshi/jna/platform/unix/aix/AixLibc.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.driver.windows.registry.package-info.java">oshi/driver/windows/registry/package-info.java</a>
                 </td>
                 <td>
@@ -1293,6 +1265,20 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.software.os.unix.freebsd.FreeBsdInternetProtocolStats.java">oshi/software/os/unix/freebsd/FreeBsdInternetProtocolStats.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
+                  <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.jna.platform.unix.FreeBsdLibc.java">oshi/jna/platform/unix/FreeBsdLibc.java</a>
                 </td>
                 <td>
                   0
@@ -1502,20 +1488,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.jna.platform.unix.solaris.package-info.java">oshi/jna/platform/unix/solaris/package-info.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.software.os.unix.aix.AixNetworkParams.java">oshi/software/os/unix/aix/AixNetworkParams.java</a>
                 </td>
                 <td>
@@ -1685,20 +1657,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.driver.unix.package-info.java">oshi/driver/unix/package-info.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.jna.platform.unix.openbsd.package-info.java">oshi/jna/platform/unix/openbsd/package-info.java</a>
                 </td>
                 <td>
                   0
@@ -3406,6 +3364,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.jna.platform.unix.AixLibc.java">oshi/jna/platform/unix/AixLibc.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.driver.windows.registry.ProcessWtsData.java">oshi/driver/windows/registry/ProcessWtsData.java</a>
                 </td>
                 <td>
@@ -4092,6 +4064,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.jna.platform.unix.OpenBsdLibc.java">oshi/jna/platform/unix/OpenBsdLibc.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.driver.unix.aix.Lssrad.java">oshi/driver/unix/aix/Lssrad.java</a>
                 </td>
                 <td>
@@ -4736,20 +4722,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.jna.platform.unix.aix.package-info.java">oshi/jna/platform/unix/aix/package-info.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.hardware.platform.unix.aix.package-info.java">oshi/hardware/platform/unix/aix/package-info.java</a>
                 </td>
                 <td>
@@ -4918,6 +4890,20 @@ under the License.
               </tr>
                           <tr>
                 <td>
+                  <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.jna.platform.unix.SolarisLibc.java">oshi/jna/platform/unix/SolarisLibc.java</a>
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+                <td>
+                  0
+                </td>
+              </tr>
+                          <tr>
+                <td>
                   <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.hardware.PowerSource.java">oshi/hardware/PowerSource.java</a>
                 </td>
                 <td>
@@ -5003,20 +4989,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.hardware.common.AbstractFirmware.java">oshi/hardware/common/AbstractFirmware.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.jna.platform.unix.solaris.SolarisLibc.java">oshi/jna/platform/unix/solaris/SolarisLibc.java</a>
                 </td>
                 <td>
                   0
@@ -5674,20 +5646,6 @@ under the License.
               </tr>
                           <tr>
                 <td>
-                  <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.jna.platform.unix.freebsd.package-info.java">oshi/jna/platform/unix/freebsd/package-info.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
                   <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.util.platform.mac.CFUtil.java">oshi/util/platform/mac/CFUtil.java</a>
                 </td>
                 <td>
@@ -5913,20 +5871,6 @@ under the License.
                           <tr>
                 <td>
                   <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.driver.unix.aix.perfstat.PerfstatMemory.java">oshi/driver/unix/aix/perfstat/PerfstatMemory.java</a>
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-                <td>
-                  0
-                </td>
-              </tr>
-                          <tr>
-                <td>
-                  <a href="https://github.com/oshi/oshi/oshi-core/checkstyle.html#oshi.jna.platform.unix.openbsd.OpenBsdLibc.java">oshi/jna/platform/unix/openbsd/OpenBsdLibc.java</a>
                 </td>
                 <td>
                   0
