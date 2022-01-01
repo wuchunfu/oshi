@@ -9,7 +9,7 @@
 <a class="jxr_linenumber" name="L1" href="#L1">1</a>   <em class="jxr_comment">/*</em>
 <a class="jxr_linenumber" name="L2" href="#L2">2</a>   <em class="jxr_comment"> * MIT License</em>
 <a class="jxr_linenumber" name="L3" href="#L3">3</a>   <em class="jxr_comment"> *</em>
-<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright (c) 2010 - 2021 The OSHI Project Contributors: <a href="https://github.com/oshi/oshi/graphs/contributors" target="alexandria_uri">https://github.com/oshi/oshi/graphs/contributors</a></em>
+<a class="jxr_linenumber" name="L4" href="#L4">4</a>   <em class="jxr_comment"> * Copyright (c) 2020-2021 The OSHI Project Contributors: <a href="https://github.com/oshi/oshi/graphs/contributors" target="alexandria_uri">https://github.com/oshi/oshi/graphs/contributors</a></em>
 <a class="jxr_linenumber" name="L5" href="#L5">5</a>   <em class="jxr_comment"> *</em>
 <a class="jxr_linenumber" name="L6" href="#L6">6</a>   <em class="jxr_comment"> * Permission is hereby granted, free of charge, to any person obtaining a copy</em>
 <a class="jxr_linenumber" name="L7" href="#L7">7</a>   <em class="jxr_comment"> * of this software and associated documentation files (the "Software"), to deal</em>
@@ -69,12 +69,12 @@
 <a class="jxr_linenumber" name="L61" href="#L61">61</a>  <em class="jxr_javadoccomment">     */</em>
 <a class="jxr_linenumber" name="L62" href="#L62">62</a>      <strong class="jxr_keyword">public</strong> <strong class="jxr_keyword">static</strong> Map&lt;String, String&gt; queryPartitionToMountMap() {
 <a class="jxr_linenumber" name="L63" href="#L63">63</a>          Map&lt;String, String&gt; mountPointMap = <strong class="jxr_keyword">new</strong> HashMap&lt;&gt;();
-<a class="jxr_linenumber" name="L64" href="#L64">64</a>          <em class="jxr_comment">// Use statfs to populate mount point map</em>
-<a class="jxr_linenumber" name="L65" href="#L65">65</a>          <strong class="jxr_keyword">int</strong> numfs = SystemB.INSTANCE.getfsstat64(<strong class="jxr_keyword">null</strong>, 0, 0);
-<a class="jxr_linenumber" name="L66" href="#L66">66</a>          <em class="jxr_comment">// Create array to hold results</em>
-<a class="jxr_linenumber" name="L67" href="#L67">67</a>          Statfs[] fs = <strong class="jxr_keyword">new</strong> Statfs[numfs];
-<a class="jxr_linenumber" name="L68" href="#L68">68</a>          <em class="jxr_comment">// Fill array with results</em>
-<a class="jxr_linenumber" name="L69" href="#L69">69</a>          SystemB.INSTANCE.getfsstat64(fs, numfs * <strong class="jxr_keyword">new</strong> Statfs().size(), SystemB.MNT_NOWAIT);
+<a class="jxr_linenumber" name="L64" href="#L64">64</a>  
+<a class="jxr_linenumber" name="L65" href="#L65">65</a>          <em class="jxr_comment">// Use statfs to get size of mounted file systems</em>
+<a class="jxr_linenumber" name="L66" href="#L66">66</a>          <strong class="jxr_keyword">int</strong> numfs = queryFsstat(<strong class="jxr_keyword">null</strong>, 0, 0);
+<a class="jxr_linenumber" name="L67" href="#L67">67</a>          <em class="jxr_comment">// Get data on file system</em>
+<a class="jxr_linenumber" name="L68" href="#L68">68</a>          Statfs[] fs = getFileSystems(numfs);
+<a class="jxr_linenumber" name="L69" href="#L69">69</a>  
 <a class="jxr_linenumber" name="L70" href="#L70">70</a>          <em class="jxr_comment">// Iterate all mounted file systems</em>
 <a class="jxr_linenumber" name="L71" href="#L71">71</a>          <strong class="jxr_keyword">for</strong> (Statfs f : fs) {
 <a class="jxr_linenumber" name="L72" href="#L72">72</a>              String mntFrom = Native.toString(f.f_mntfromname, StandardCharsets.UTF_8);
